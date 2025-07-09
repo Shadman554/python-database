@@ -1,0 +1,131 @@
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.orm import Session
+from typing import List, Optional
+import models
+import schemas
+import crud
+from database import get_db
+from auth import get_current_user, get_current_admin_user, security
+from utils import create_paginated_response
+
+router = APIRouter()
+
+@router.get("/me", response_model=schemas.User)
+async def get_current_user_info(
+    current_user: models.User = Depends(lambda: get_current_user(security, get_db()))
+):
+    """Get current user information"""
+    return current_user
+
+@router.get("/", response_model=schemas.PaginatedResponse)
+async def get_users(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=100),
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+):
+    """Get all users (admin only)"""
+    try:
+        users = crud.get_items(db, models.User, skip, limit)
+        total = crud.count_items(db, models.User)
+        return create_paginated_response(users, total, skip // limit + 1, limit)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve users: {str(e)}")
+
+@router.get("/{user_id}", response_model=schemas.User)
+async def get_user(
+    user_id: str,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+):
+    """Get a specific user by ID (admin only)"""
+    user = crud.get_item(db, models.User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
+@router.put("/{user_id}", response_model=schemas.User)
+async def update_user(
+    user_id: str,
+    user_update: schemas.UserBase,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+):
+    """Update a user (admin only)"""
+    db_user = crud.get_item(db, models.User, user_id)
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    try:
+        updated_user = crud.update_item(db, db_user, user_update.dict())
+        return updated_user
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update user: {str(e)}")
+
+@router.delete("/{user_id}")
+async def delete_user(
+    user_id: str,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+):
+    """Delete a user (admin only)"""
+    db_user = crud.get_item(db, models.User, user_id)
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    try:
+        crud.delete_item(db, db_user)
+        return {"message": "User deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to delete user: {str(e)}")
+
+@router.post("/{user_id}/points")
+async def add_user_points(
+    user_id: str,
+    points: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+):
+    """Add points to a user (admin only)"""
+    try:
+        updated_user = crud.update_user_points(db, user_id, points)
+        if not updated_user:
+            raise HTTPException(status_code=404, detail="User not found")
+        return {"message": f"Added {points} points to user", "total_points": updated_user.total_points}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to add points: {str(e)}")
+
+@router.get("/leaderboard/top")
+async def get_leaderboard(
+    limit: int = Query(10, ge=1, le=50),
+    db: Session = Depends(get_db)
+):
+    """Get top users by points"""
+    try:
+        users = db.query(models.User).order_by(models.User.total_points.desc()).limit(limit).all()
+        return {
+            "leaderboard": [
+                {
+                    "rank": i + 1,
+                    "username": user.username,
+                    "total_points": user.total_points,
+                    "today_points": user.today_points
+                }
+                for i, user in enumerate(users)
+            ]
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get leaderboard: {str(e)}")
+
+@router.post("/reset-daily-points")
+async def reset_daily_points(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+):
+    """Reset daily points for all users (admin only)"""
+    try:
+        db.query(models.User).update({models.User.today_points: 0})
+        db.commit()
+        return {"message": "Daily points reset for all users"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to reset daily points: {str(e)}")

@@ -1,0 +1,90 @@
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.orm import Session
+from typing import List, Optional
+import models
+import schemas
+import crud
+from database import get_db
+from auth import get_current_admin_user, security
+from utils import create_paginated_response
+import uuid
+
+router = APIRouter()
+
+@router.get("/", response_model=schemas.PaginatedResponse)
+async def get_diseases(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=100),
+    search: Optional[str] = Query(None),
+    db: Session = Depends(get_db)
+):
+    """Get diseases with optional search and pagination"""
+    try:
+        if search:
+            diseases = crud.search_diseases(db, search, skip, limit)
+            total = crud.count_search_results(db, models.Disease, search)
+        else:
+            diseases = crud.get_items(db, models.Disease, skip, limit)
+            total = crud.count_items(db, models.Disease)
+        
+        return create_paginated_response(diseases, total, skip // limit + 1, limit)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve diseases: {str(e)}")
+
+@router.get("/{disease_id}", response_model=schemas.Disease)
+async def get_disease(disease_id: str, db: Session = Depends(get_db)):
+    """Get a specific disease by ID"""
+    disease = crud.get_item(db, models.Disease, disease_id)
+    if not disease:
+        raise HTTPException(status_code=404, detail="Disease not found")
+    return disease
+
+@router.post("/", response_model=schemas.Disease)
+async def create_disease(
+    disease: schemas.DiseaseCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+):
+    """Create a new disease (admin only)"""
+    try:
+        disease_data = disease.dict()
+        disease_data['id'] = str(uuid.uuid4())
+        db_disease = crud.create_item(db, models.Disease, disease_data)
+        return db_disease
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to create disease: {str(e)}")
+
+@router.put("/{disease_id}", response_model=schemas.Disease)
+async def update_disease(
+    disease_id: str,
+    disease: schemas.DiseaseCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+):
+    """Update a disease (admin only)"""
+    db_disease = crud.get_item(db, models.Disease, disease_id)
+    if not db_disease:
+        raise HTTPException(status_code=404, detail="Disease not found")
+    
+    try:
+        updated_disease = crud.update_item(db, db_disease, disease.dict())
+        return updated_disease
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update disease: {str(e)}")
+
+@router.delete("/{disease_id}")
+async def delete_disease(
+    disease_id: str,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+):
+    """Delete a disease (admin only)"""
+    db_disease = crud.get_item(db, models.Disease, disease_id)
+    if not db_disease:
+        raise HTTPException(status_code=404, detail="Disease not found")
+    
+    try:
+        crud.delete_item(db, db_disease)
+        return {"message": "Disease deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to delete disease: {str(e)}")
