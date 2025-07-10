@@ -4,8 +4,21 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from dotenv import load_dotenv
 
-# Use environment database URL (will use Replit's PostgreSQL)
+# Load environment variables
+load_dotenv()
+
+# Check if DATABASE_URL is available
+DATABASE_URL = os.getenv('DATABASE_URL')
+if not DATABASE_URL:
+    print("❌ No DATABASE_URL environment variable found")
+    print("Please set your Railway database URL in the .env file")
+    exit(1)
+
+print(f"✅ Using database: {DATABASE_URL}")
+
+# Use environment database URL (will use Railway PostgreSQL)
 from database import engine, SessionLocal
 from models import Base, Book, Disease, Drug, DictionaryWord, User, Question, Notification, Staff, TutorialVideo, NormalRange, AppLink, About
 
@@ -58,13 +71,17 @@ def bulk_import_diseases(db: Session):
         with open('attached_assets/diseases_1752089134448.json', 'r', encoding='utf-8') as f:
             diseases_data = json.load(f)
 
-        existing_ids = {disease.id for disease in db.query(Disease.id).all()}
+        print(f"Found {len(diseases_data)} diseases in JSON file")
+        
+        existing_ids = {str(disease.id) for disease in db.query(Disease.id).all()}
+        print(f"Found {len(existing_ids)} existing diseases in database")
 
         new_diseases = []
         for disease_data in diseases_data:
-            if disease_data['id'] not in existing_ids:
+            disease_id = str(disease_data['id'])
+            if disease_id not in existing_ids:
                 new_diseases.append(Disease(
-                    id=disease_data['id'],
+                    id=disease_id,
                     name=disease_data.get('name', ''),
                     kurdish=disease_data.get('kurdish', ''),
                     symptoms=disease_data.get('symptoms', ''),
@@ -72,14 +89,21 @@ def bulk_import_diseases(db: Session):
                     control=disease_data.get('control', ''),
                     created_at=datetime.utcnow()
                 ))
+            else:
+                print(f"Disease {disease_id} already exists, skipping")
 
         if new_diseases:
             db.add_all(new_diseases)
             db.commit()
             print(f"✓ Imported {len(new_diseases)} diseases")
         else:
-            print("✓ No new diseases to import")
+            print(f"✓ No new diseases to import (found {len(existing_ids)} existing)")
 
+    except FileNotFoundError:
+        print("Error: diseases_1752089134448.json file not found in attached_assets/")
+        print("Please check if the file exists and the path is correct")
+    except json.JSONDecodeError as e:
+        print(f"Error parsing JSON file: {e}")
     except Exception as e:
         print(f"Error importing diseases: {e}")
         db.rollback()
