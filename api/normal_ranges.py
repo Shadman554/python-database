@@ -11,6 +11,14 @@ import uuid
 
 router = APIRouter()
 
+@router.get("/by-name/{range_name}", response_model=schemas.NormalRange)
+async def get_range_by_name(range_name: str, db: Session = Depends(get_db)):
+    """Get a specific normal range by name"""
+    range_data = db.query(models.NormalRange).filter(models.NormalRange.name.ilike(f"%{range_name}%")).first()
+    if not range_data:
+        raise HTTPException(status_code=404, detail="Normal range not found")
+    return range_data
+
 @router.get("/", response_model=schemas.PaginatedResponse)
 async def get_normal_ranges(
     skip: int = Query(0, ge=0),

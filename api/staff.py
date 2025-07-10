@@ -11,6 +11,14 @@ import uuid
 
 router = APIRouter()
 
+@router.get("/by-name/{staff_name}", response_model=schemas.Staff)
+async def get_staff_by_name(staff_name: str, db: Session = Depends(get_db)):
+    """Get a specific staff member by name"""
+    staff = db.query(models.Staff).filter(models.Staff.name.ilike(f"%{staff_name}%")).first()
+    if not staff:
+        raise HTTPException(status_code=404, detail="Staff member not found")
+    return staff
+
 @router.get("/", response_model=schemas.PaginatedResponse)
 async def get_staff(
     skip: int = Query(0, ge=0),

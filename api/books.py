@@ -35,6 +35,14 @@ async def get_books(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve books: {str(e)}")
 
+@router.get("/by-title/{book_title}", response_model=schemas.Book)
+async def get_book_by_title(book_title: str, db: Session = Depends(get_db)):
+    """Get a specific book by title"""
+    book = db.query(models.Book).filter(models.Book.title.ilike(f"%{book_title}%")).first()
+    if not book:
+        raise HTTPException(status_code=404, detail="Book not found")
+    return book
+
 @router.get("/{book_id}", response_model=schemas.Book)
 async def get_book(book_id: str, db: Session = Depends(get_db)):
     """Get a specific book by ID"""

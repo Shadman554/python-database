@@ -35,6 +35,14 @@ async def get_drugs(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve drugs: {str(e)}")
 
+@router.get("/by-name/{drug_name}", response_model=schemas.Drug)
+async def get_drug_by_name(drug_name: str, db: Session = Depends(get_db)):
+    """Get a specific drug by name"""
+    drug = db.query(models.Drug).filter(models.Drug.name.ilike(f"%{drug_name}%")).first()
+    if not drug:
+        raise HTTPException(status_code=404, detail="Drug not found")
+    return drug
+
 @router.get("/{drug_id}", response_model=schemas.Drug)
 async def get_drug(drug_id: str, db: Session = Depends(get_db)):
     """Get a specific drug by ID"""

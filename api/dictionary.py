@@ -11,6 +11,14 @@ import uuid
 
 router = APIRouter()
 
+@router.get("/by-name/{word_name}", response_model=schemas.DictionaryWord)
+async def get_word_by_name(word_name: str, db: Session = Depends(get_db)):
+    """Get a specific dictionary word by name"""
+    word = db.query(models.DictionaryWord).filter(models.DictionaryWord.name.ilike(f"%{word_name}%")).first()
+    if not word:
+        raise HTTPException(status_code=404, detail="Dictionary word not found")
+    return word
+
 @router.get("/", response_model=schemas.PaginatedResponse)
 async def get_dictionary_words(
     skip: int = Query(0, ge=0),

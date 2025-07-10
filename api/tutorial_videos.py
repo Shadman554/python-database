@@ -11,6 +11,14 @@ import uuid
 
 router = APIRouter()
 
+@router.get("/by-title/{video_title}", response_model=schemas.TutorialVideo)
+async def get_video_by_title(video_title: str, db: Session = Depends(get_db)):
+    """Get a specific tutorial video by title"""
+    video = db.query(models.TutorialVideo).filter(models.TutorialVideo.title.ilike(f"%{video_title}%")).first()
+    if not video:
+        raise HTTPException(status_code=404, detail="Tutorial video not found")
+    return video
+
 @router.get("/", response_model=schemas.PaginatedResponse)
 async def get_tutorial_videos(
     skip: int = Query(0, ge=0),

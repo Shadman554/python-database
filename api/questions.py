@@ -11,6 +11,18 @@ import uuid
 
 router = APIRouter()
 
+@router.get("/by-user/{user_name}", response_model=schemas.PaginatedResponse)
+async def get_questions_by_user(
+    user_name: str,
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=100),
+    db: Session = Depends(get_db)
+):
+    """Get questions by user name"""
+    questions = db.query(models.Question).filter(models.Question.user_name.ilike(f"%{user_name}%")).offset(skip).limit(limit).all()
+    total = db.query(models.Question).filter(models.Question.user_name.ilike(f"%{user_name}%")).count()
+    return create_paginated_response(questions, total, skip // limit + 1, limit)
+
 @router.get("/", response_model=schemas.PaginatedResponse)
 async def get_questions(
     skip: int = Query(0, ge=0),

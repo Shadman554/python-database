@@ -20,8 +20,36 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Veterinary Educational Platform API",
-    description="A comprehensive API for veterinary education with multilingual content management",
-    version="1.0.0",
+    description="""
+    A comprehensive API for veterinary education with multilingual content management.
+    
+    ## Features
+    - **Authentication**: JWT-based user authentication with role-based access
+    - **Content Management**: CRUD operations for educational content
+    - **Search by Name**: All entities can be accessed by name/title in addition to ID
+    - **Multilingual Support**: Content in English, Kurdish, and Arabic
+    - **File Management**: Upload and serve educational resources
+    - **User Interaction**: Questions, notifications, and points system
+    
+    ## Available Endpoints
+    - **Books**: Access by ID or title (`/api/books/by-title/{title}`)
+    - **Diseases**: Access by ID or name (`/api/diseases/by-name/{name}`)
+    - **Drugs**: Access by ID or name (`/api/drugs/by-name/{name}`)
+    - **Dictionary**: Access by ID or word (`/api/dictionary/by-name/{word}`)
+    - **Staff**: Access by ID or name (`/api/staff/by-name/{name}`)
+    - **Tutorial Videos**: Access by ID or title (`/api/tutorial-videos/by-title/{title}`)
+    - **Normal Ranges**: Access by ID or name (`/api/normal-ranges/by-name/{name}`)
+    - **Questions**: Access by ID or user (`/api/questions/by-user/{user_name}`)
+    - **Users**: User management and authentication
+    - **Notifications**: System notifications
+    - **App Links**: Mobile app download links
+    - **About**: About page content
+    
+    ## Authentication
+    Most endpoints require authentication. Use `/api/auth/login` to get a JWT token,
+    then include it in the Authorization header as `Bearer <token>`.
+    """,
+    version="2.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
 )
