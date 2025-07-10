@@ -6,7 +6,7 @@ load_dotenv()
 
 class Settings:
     # Database
-    DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://user:password@localhost/vetdb')
+    DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///./local_dev.db')
     
     # JWT
     SECRET_KEY = os.getenv('SECRET_KEY', 'your-secret-key-here')
