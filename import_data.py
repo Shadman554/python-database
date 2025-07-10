@@ -73,29 +73,93 @@ def bulk_import_diseases(db: Session):
 
         print(f"Found {len(diseases_data)} diseases in JSON file")
         
-        existing_ids = {str(disease.id) for disease in db.query(Disease.id).all()}
+        # Check first item structure
+        if diseases_data:
+            print(f"Sample disease data keys: {list(diseases_data[0].keys())}")
+        
+        # Test database connection
+        try:
+            test_count = db.query(Disease).count()
+            print(f"Database connection successful. Current diseases count: {test_count}")
+        except Exception as e:
+            print(f"Database connection error: {e}")
+            return
+        
+        existing_ids = {disease.id for disease in db.query(Disease.id).all()}
         print(f"Found {len(existing_ids)} existing diseases in database")
 
+        # Track IDs to detect duplicates within the JSON file
+        seen_ids = set()
+        duplicate_ids = set()
+        
         new_diseases = []
-        for disease_data in diseases_data:
-            disease_id = str(disease_data['id'])
-            if disease_id not in existing_ids:
-                new_diseases.append(Disease(
-                    id=disease_id,
-                    name=disease_data.get('name', ''),
-                    kurdish=disease_data.get('kurdish', ''),
-                    symptoms=disease_data.get('symptoms', ''),
-                    cause=disease_data.get('cause', ''),
-                    control=disease_data.get('control', ''),
-                    created_at=datetime.utcnow()
-                ))
-            else:
-                print(f"Disease {disease_id} already exists, skipping")
+        for i, disease_data in enumerate(diseases_data):
+            try:
+                disease_id = disease_data['id']
+                
+                # Check for duplicates within the JSON file
+                if disease_id in seen_ids:
+                    duplicate_ids.add(disease_id)
+                    print(f"Warning: Duplicate ID {disease_id} found in JSON at position {i+1}, skipping")
+                    continue
+                seen_ids.add(disease_id)
+                
+                if disease_id not in existing_ids:
+                    # Validate required fields
+                    name = disease_data.get('name', '').strip()
+                    if not name:
+                        print(f"Warning: Disease {i+1} has no name, skipping")
+                        continue
+                        
+                    disease = Disease(
+                        id=disease_id,
+                        name=name,
+                        kurdish=disease_data.get('kurdish', '').strip(),
+                        symptoms=disease_data.get('symptoms', '').strip(),
+                        cause=disease_data.get('cause', '').strip(),
+                        control=disease_data.get('control', '').strip(),
+                        created_at=datetime.utcnow()
+                    )
+                    new_diseases.append(disease)
+                    print(f"Prepared disease {i+1}: {name}")
+                else:
+                    print(f"Disease {disease_id} already exists in database, skipping")
+            except Exception as e:
+                print(f"Error processing disease {i+1}: {e}")
+                print(f"Disease data: {disease_data}")
+                continue
+        
+        if duplicate_ids:
+            print(f"\n⚠️  Found {len(duplicate_ids)} duplicate IDs in JSON file: {list(duplicate_ids)}")
+            print(f"This explains why only {32 - len(duplicate_ids)} unique diseases can be imported")
 
         if new_diseases:
-            db.add_all(new_diseases)
-            db.commit()
-            print(f"✓ Imported {len(new_diseases)} diseases")
+            print(f"Adding {len(new_diseases)} diseases to database...")
+            try:
+                # Add diseases one by one to identify problematic ones
+                added_count = 0
+                for disease in new_diseases:
+                    try:
+                        db.add(disease)
+                        db.flush()  # Flush to check for errors without committing
+                        added_count += 1
+                    except Exception as e:
+                        print(f"Error adding disease {disease.name}: {e}")
+                        db.rollback()
+                        continue
+                
+                if added_count > 0:
+                    db.commit()
+                    print(f"✓ Successfully imported {added_count} diseases")
+                    
+                    # Verify import
+                    final_count = db.query(Disease).count()
+                    print(f"✓ Database now contains {final_count} total diseases")
+                else:
+                    print("❌ No diseases were successfully added")
+            except Exception as e:
+                print(f"Error during commit: {e}")
+                db.rollback()
         else:
             print(f"✓ No new diseases to import (found {len(existing_ids)} existing)")
 
@@ -106,6 +170,8 @@ def bulk_import_diseases(db: Session):
         print(f"Error parsing JSON file: {e}")
     except Exception as e:
         print(f"Error importing diseases: {e}")
+        import traceback
+        traceback.print_exc()
         db.rollback()
 
 def bulk_import_drugs(db: Session):
