@@ -216,7 +216,7 @@ class About(AboutBase):
 
 # Common response schemas
 class PaginatedResponse(BaseModel):
-    items: List[BaseModel]
+    items: List[dict]
     total: int
     page: int
     size: int
