@@ -43,10 +43,10 @@ async def get_book_by_title(book_title: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Book not found")
     return book
 
-@router.get("/{book_id}", response_model=schemas.Book)
-async def get_book(book_id: str, db: Session = Depends(get_db)):
-    """Get a specific book by ID"""
-    book = crud.get_item(db, models.Book, book_id)
+@router.get("/{book_title}", response_model=schemas.Book)
+async def get_book(book_title: str, db: Session = Depends(get_db)):
+    """Get a specific book by title"""
+    book = db.query(models.Book).filter(models.Book.title == book_title).first()
     if not book:
         raise HTTPException(status_code=404, detail="Book not found")
     return book
@@ -66,15 +66,15 @@ async def create_book(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create book: {str(e)}")
 
-@router.put("/{book_id}", response_model=schemas.Book)
+@router.put("/{book_title}", response_model=schemas.Book)
 async def update_book(
-    book_id: str,
+    book_title: str,
     book: schemas.BookCreate,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
 ):
     """Update a book (admin only)"""
-    db_book = crud.get_item(db, models.Book, book_id)
+    db_book = db.query(models.Book).filter(models.Book.title == book_title).first()
     if not db_book:
         raise HTTPException(status_code=404, detail="Book not found")
     
@@ -84,14 +84,14 @@ async def update_book(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to update book: {str(e)}")
 
-@router.delete("/{book_id}")
+@router.delete("/{book_title}")
 async def delete_book(
-    book_id: str,
+    book_title: str,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
 ):
     """Delete a book (admin only)"""
-    db_book = crud.get_item(db, models.Book, book_id)
+    db_book = db.query(models.Book).filter(models.Book.title == book_title).first()
     if not db_book:
         raise HTTPException(status_code=404, detail="Book not found")
     
@@ -101,15 +101,15 @@ async def delete_book(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to delete book: {str(e)}")
 
-@router.post("/{book_id}/upload-cover")
+@router.post("/{book_title}/upload-cover")
 async def upload_book_cover(
-    book_id: str,
+    book_title: str,
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
 ):
     """Upload book cover image (admin only)"""
-    db_book = crud.get_item(db, models.Book, book_id)
+    db_book = db.query(models.Book).filter(models.Book.title == book_title).first()
     if not db_book:
         raise HTTPException(status_code=404, detail="Book not found")
     

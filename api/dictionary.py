@@ -31,7 +31,7 @@ async def get_dictionary_words(
     """Get dictionary words with optional filtering and pagination"""
     try:
         query = db.query(models.DictionaryWord)
-        
+
         if search:
             query = query.filter(
                 models.DictionaryWord.name.ilike(f"%{search}%") |
@@ -39,16 +39,16 @@ async def get_dictionary_words(
                 models.DictionaryWord.arabic.ilike(f"%{search}%") |
                 models.DictionaryWord.description.ilike(f"%{search}%")
             )
-        
+
         if favorites_only:
             query = query.filter(models.DictionaryWord.is_favorite == True)
-        
+
         if saved_only:
             query = query.filter(models.DictionaryWord.is_saved == True)
-        
+
         total = query.count()
         words = query.offset(skip).limit(limit).all()
-        
+
         return create_paginated_response(words, total, skip // limit + 1, limit)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve dictionary words: {str(e)}")
@@ -87,7 +87,7 @@ async def update_dictionary_word(
     db_word = db.query(models.DictionaryWord).filter(models.DictionaryWord.name == word_name).first()
     if not db_word:
         raise HTTPException(status_code=404, detail="Dictionary word not found")
-    
+
     try:
         updated_word = crud.update_item(db, db_word, word.dict())
         return updated_word
@@ -104,55 +104,55 @@ async def delete_dictionary_word(
     db_word = db.query(models.DictionaryWord).filter(models.DictionaryWord.name == word_name).first()
     if not db_word:
         raise HTTPException(status_code=404, detail="Dictionary word not found")
-    
+
     try:
         crud.delete_item(db, db_word)
         return {"message": "Dictionary word deleted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to delete dictionary word: {str(e)}")
 
-@router.post("/{word_id}/favorite")
+@router.post("/{word_name}/favorite")
 async def toggle_favorite(
-    word_id: str,
+    word_name: str,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_user(security, db))
 ):
     """Toggle favorite status of a dictionary word"""
-    db_word = crud.get_item(db, models.DictionaryWord, word_id)
-    if not db_word:
+    word = db.query(models.DictionaryWord).filter(models.DictionaryWord.name == word_name).first()
+    if not word:
         raise HTTPException(status_code=404, detail="Dictionary word not found")
-    
+
     try:
-        db_word.is_favorite = not db_word.is_favorite
+        word.is_favorite = not word.is_favorite
         db.commit()
-        
+
         # Award points for favoriting
-        if db_word.is_favorite:
+        if word.is_favorite:
             crud.update_user_points(db, current_user.id, 1)
-        
-        return {"message": "Favorite status updated", "is_favorite": db_word.is_favorite}
+
+        return {"message": "Favorite status updated", "is_favorite": word.is_favorite}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to update favorite status: {str(e)}")
 
-@router.post("/{word_id}/save")
+@router.post("/{word_name}/save")
 async def toggle_save(
-    word_id: str,
+    word_name: str,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_user(security, db))
 ):
     """Toggle save status of a dictionary word"""
-    db_word = crud.get_item(db, models.DictionaryWord, word_id)
-    if not db_word:
+    word = db.query(models.DictionaryWord).filter(models.DictionaryWord.name == word_name).first()
+    if not word:
         raise HTTPException(status_code=404, detail="Dictionary word not found")
-    
+
     try:
-        db_word.is_saved = not db_word.is_saved
+        word.is_saved = not word.is_saved
         db.commit()
-        
+
         # Award points for saving
-        if db_word.is_saved:
+        if word.is_saved:
             crud.update_user_points(db, current_user.id, 1)
-        
-        return {"message": "Save status updated", "is_saved": db_word.is_saved}
+
+        return {"message": "Save status updated", "is_saved": word.is_saved}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to update save status: {str(e)}")

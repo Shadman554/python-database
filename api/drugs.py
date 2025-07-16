@@ -43,10 +43,10 @@ async def get_drug_by_name(drug_name: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Drug not found")
     return drug
 
-@router.get("/{drug_id}", response_model=schemas.Drug)
-async def get_drug(drug_id: str, db: Session = Depends(get_db)):
-    """Get a specific drug by ID"""
-    drug = crud.get_item(db, models.Drug, drug_id)
+@router.get("/{drug_name}", response_model=schemas.Drug)
+async def get_drug(drug_name: str, db: Session = Depends(get_db)):
+    """Get a specific drug by name"""
+    drug = db.query(models.Drug).filter(models.Drug.name == drug_name).first()
     if not drug:
         raise HTTPException(status_code=404, detail="Drug not found")
     return drug
@@ -66,15 +66,15 @@ async def create_drug(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create drug: {str(e)}")
 
-@router.put("/{drug_id}", response_model=schemas.Drug)
+@router.put("/{drug_name}", response_model=schemas.Drug)
 async def update_drug(
-    drug_id: str,
+    drug_name: str,
     drug: schemas.DrugCreate,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
 ):
     """Update a drug (admin only)"""
-    db_drug = crud.get_item(db, models.Drug, drug_id)
+    db_drug = db.query(models.Drug).filter(models.Drug.name == drug_name).first()
     if not db_drug:
         raise HTTPException(status_code=404, detail="Drug not found")
     
@@ -84,14 +84,14 @@ async def update_drug(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to update drug: {str(e)}")
 
-@router.delete("/{drug_id}")
+@router.delete("/{drug_name}")
 async def delete_drug(
-    drug_id: str,
+    drug_name: str,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
 ):
     """Delete a drug (admin only)"""
-    db_drug = crud.get_item(db, models.Drug, drug_id)
+    db_drug = db.query(models.Drug).filter(models.Drug.name == drug_name).first()
     if not db_drug:
         raise HTTPException(status_code=404, detail="Drug not found")
     
