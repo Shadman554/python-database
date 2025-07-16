@@ -1,0 +1,95 @@
+
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.orm import Session
+from typing import List, Optional
+import models
+import schemas
+import crud
+from database import get_db
+from auth import get_current_admin_user, security
+from utils import create_paginated_response
+import uuid
+
+router = APIRouter()
+
+@router.get("/", response_model=schemas.PaginatedResponse)
+async def get_other_slides(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=100),
+    species: Optional[str] = Query(None),
+    db: Session = Depends(get_db)
+):
+    """Get all other slides with pagination and optional species filter"""
+    try:
+        query = db.query(models.OtherSlide)
+        if species:
+            query = query.filter(models.OtherSlide.species.ilike(f"%{species}%"))
+        
+        slides = query.order_by(models.OtherSlide.created_at.desc()).offset(skip).limit(limit).all()
+        
+        if species:
+            total = query.count()
+        else:
+            total = crud.count_items(db, models.OtherSlide)
+            
+        return create_paginated_response(slides, total, skip // limit + 1, limit)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve other slides: {str(e)}")
+
+@router.get("/{slide_id}", response_model=schemas.OtherSlide)
+async def get_other_slide(slide_id: str, db: Session = Depends(get_db)):
+    """Get a specific other slide by ID"""
+    slide = crud.get_item(db, models.OtherSlide, slide_id)
+    if not slide:
+        raise HTTPException(status_code=404, detail="Other slide not found")
+    return slide
+
+@router.post("/", response_model=schemas.OtherSlide)
+async def create_other_slide(
+    slide: schemas.OtherSlideCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+):
+    """Create a new other slide (admin only)"""
+    try:
+        slide_data = slide.dict()
+        slide_data['id'] = str(uuid.uuid4())
+        db_slide = crud.create_item(db, models.OtherSlide, slide_data)
+        return db_slide
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to create other slide: {str(e)}")
+
+@router.put("/{slide_id}", response_model=schemas.OtherSlide)
+async def update_other_slide(
+    slide_id: str,
+    slide: schemas.OtherSlideCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+):
+    """Update an other slide (admin only)"""
+    db_slide = crud.get_item(db, models.OtherSlide, slide_id)
+    if not db_slide:
+        raise HTTPException(status_code=404, detail="Other slide not found")
+    
+    try:
+        updated_slide = crud.update_item(db, db_slide, slide.dict())
+        return updated_slide
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update other slide: {str(e)}")
+
+@router.delete("/{slide_id}")
+async def delete_other_slide(
+    slide_id: str,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+):
+    """Delete an other slide (admin only)"""
+    db_slide = crud.get_item(db, models.OtherSlide, slide_id)
+    if not db_slide:
+        raise HTTPException(status_code=404, detail="Other slide not found")
+    
+    try:
+        crud.delete_item(db, db_slide)
+        return {"message": "Other slide deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to delete other slide: {str(e)}")

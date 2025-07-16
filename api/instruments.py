@@ -1,0 +1,85 @@
+
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.orm import Session
+from typing import List, Optional
+import models
+import schemas
+import crud
+from database import get_db
+from auth import get_current_admin_user, security
+from utils import create_paginated_response
+import uuid
+
+router = APIRouter()
+
+@router.get("/", response_model=schemas.PaginatedResponse)
+async def get_instruments(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=100),
+    db: Session = Depends(get_db)
+):
+    """Get all instruments with pagination"""
+    try:
+        instruments = db.query(models.Instrument).order_by(models.Instrument.created_at.desc()).offset(skip).limit(limit).all()
+        total = crud.count_items(db, models.Instrument)
+        return create_paginated_response(instruments, total, skip // limit + 1, limit)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve instruments: {str(e)}")
+
+@router.get("/{instrument_id}", response_model=schemas.Instrument)
+async def get_instrument(instrument_id: str, db: Session = Depends(get_db)):
+    """Get a specific instrument by ID"""
+    instrument = crud.get_item(db, models.Instrument, instrument_id)
+    if not instrument:
+        raise HTTPException(status_code=404, detail="Instrument not found")
+    return instrument
+
+@router.post("/", response_model=schemas.Instrument)
+async def create_instrument(
+    instrument: schemas.InstrumentCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+):
+    """Create a new instrument (admin only)"""
+    try:
+        instrument_data = instrument.dict()
+        instrument_data['id'] = str(uuid.uuid4())
+        db_instrument = crud.create_item(db, models.Instrument, instrument_data)
+        return db_instrument
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to create instrument: {str(e)}")
+
+@router.put("/{instrument_id}", response_model=schemas.Instrument)
+async def update_instrument(
+    instrument_id: str,
+    instrument: schemas.InstrumentCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+):
+    """Update an instrument (admin only)"""
+    db_instrument = crud.get_item(db, models.Instrument, instrument_id)
+    if not db_instrument:
+        raise HTTPException(status_code=404, detail="Instrument not found")
+    
+    try:
+        updated_instrument = crud.update_item(db, db_instrument, instrument.dict())
+        return updated_instrument
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update instrument: {str(e)}")
+
+@router.delete("/{instrument_id}")
+async def delete_instrument(
+    instrument_id: str,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+):
+    """Delete an instrument (admin only)"""
+    db_instrument = crud.get_item(db, models.Instrument, instrument_id)
+    if not db_instrument:
+        raise HTTPException(status_code=404, detail="Instrument not found")
+    
+    try:
+        crud.delete_item(db, db_instrument)
+        return {"message": "Instrument deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to delete instrument: {str(e)}")

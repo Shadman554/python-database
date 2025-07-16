@@ -9,9 +9,9 @@ import os
 from database import engine, get_db
 from models import Base
 from api import (
-    books, diseases, drugs, dictionary, users, questions, 
-    notifications, staff, tutorial_videos, normal_ranges, 
-    app_links, about, auth as auth_api
+    auth as auth_api, users, books, diseases, drugs, dictionary, questions, 
+    notifications, staff, normal_ranges, 
+    app_links, about, instruments, notes, urine_slides, stool_slides, other_slides
 )
 from auth import verify_token
 
@@ -22,7 +22,7 @@ app = FastAPI(
     title="Veterinary Educational Platform API",
     description="""
     A comprehensive API for veterinary education with multilingual content management.
-    
+
     ## Features
     - **Authentication**: JWT-based user authentication with role-based access
     - **Content Management**: CRUD operations for educational content
@@ -30,7 +30,7 @@ app = FastAPI(
     - **Multilingual Support**: Content in English, Kurdish, and Arabic
     - **File Management**: Upload and serve educational resources
     - **User Interaction**: Questions, notifications, and points system
-    
+
     ## Available Endpoints
     - **Books**: Access by ID or title (`/api/books/by-title/{title}`)
     - **Diseases**: Access by ID or name (`/api/diseases/by-name/{name}`)
@@ -44,7 +44,7 @@ app = FastAPI(
     - **Notifications**: System notifications
     - **App Links**: Mobile app download links
     - **About**: About page content
-    
+
     ## Authentication
     Most endpoints require authentication. Use `/api/auth/login` to get a JWT token,
     then include it in the Authorization header as `Bearer <token>`.
@@ -76,10 +76,14 @@ app.include_router(users.router, prefix="/api/users", tags=["Users"])
 app.include_router(questions.router, prefix="/api/questions", tags=["Questions"])
 app.include_router(notifications.router, prefix="/api/notifications", tags=["Notifications"])
 app.include_router(staff.router, prefix="/api/staff", tags=["Staff"])
-app.include_router(tutorial_videos.router, prefix="/api/tutorial-videos", tags=["Tutorial Videos"])
 app.include_router(normal_ranges.router, prefix="/api/normal-ranges", tags=["Normal Ranges"])
 app.include_router(app_links.router, prefix="/api/app-links", tags=["App Links"])
 app.include_router(about.router, prefix="/api/about", tags=["About"])
+app.include_router(instruments.router, prefix="/api/instruments", tags=["instruments"])
+app.include_router(notes.router, prefix="/api/notes", tags=["notes"])
+app.include_router(urine_slides.router, prefix="/api/urine-slides", tags=["urine-slides"])
+app.include_router(stool_slides.router, prefix="/api/stool-slides", tags=["stool-slides"])
+app.include_router(other_slides.router, prefix="/api/other-slides", tags=["other-slides"])
 
 @app.get("/")
 async def root():

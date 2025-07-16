@@ -99,12 +99,49 @@ class Staff(Base):
     twitter = Column(String(1000))
     snapchat = Column(String(1000))
 
-class TutorialVideo(Base):
-    __tablename__ = "tutorial_videos"
+class Instrument(Base):
+    __tablename__ = "instruments"
     
     id = Column(String, primary_key=True, index=True)
-    title = Column(String(500))
-    video_id = Column(String(255))  # YouTube video ID
+    name = Column(String(500), index=True)
+    description = Column(Text)
+    image_url = Column(String(1000))
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+class Note(Base):
+    __tablename__ = "notes"
+    
+    id = Column(String, primary_key=True, index=True)
+    name = Column(String(500), index=True)
+    description = Column(Text)
+    image_url = Column(String(1000))
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+class UrineSlide(Base):
+    __tablename__ = "urine_slides"
+    
+    id = Column(String, primary_key=True, index=True)
+    name = Column(String(500), index=True)
+    species = Column(String(255), index=True)
+    image_url = Column(String(1000))
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+class StoolSlide(Base):
+    __tablename__ = "stool_slides"
+    
+    id = Column(String, primary_key=True, index=True)
+    name = Column(String(500), index=True)
+    species = Column(String(255), index=True)
+    image_url = Column(String(1000))
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+class OtherSlide(Base):
+    __tablename__ = "other_slides"
+    
+    id = Column(String, primary_key=True, index=True)
+    name = Column(String(500), index=True)
+    species = Column(String(255), index=True)
+    image_url = Column(String(1000))
     created_at = Column(DateTime, default=datetime.utcnow)
 
 class NormalRange(Base):

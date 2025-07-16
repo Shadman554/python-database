@@ -154,15 +154,80 @@ class Staff(StaffBase):
     class Config:
         from_attributes = True
 
-# Tutorial Video schemas
-class TutorialVideoBase(BaseModel):
-    title: str
-    video_id: str
+# Instrument schemas
+class InstrumentBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+    image_url: Optional[str] = None
 
-class TutorialVideoCreate(TutorialVideoBase):
+class InstrumentCreate(InstrumentBase):
     pass
 
-class TutorialVideo(TutorialVideoBase):
+class Instrument(InstrumentBase):
+    id: str
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+# Note schemas
+class NoteBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+    image_url: Optional[str] = None
+
+class NoteCreate(NoteBase):
+    pass
+
+class Note(NoteBase):
+    id: str
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+# Urine Slide schemas
+class UrineSlideBase(BaseModel):
+    name: str
+    species: str
+    image_url: Optional[str] = None
+
+class UrineSlideCreate(UrineSlideBase):
+    pass
+
+class UrineSlide(UrineSlideBase):
+    id: str
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+# Stool Slide schemas
+class StoolSlideBase(BaseModel):
+    name: str
+    species: str
+    image_url: Optional[str] = None
+
+class StoolSlideCreate(StoolSlideBase):
+    pass
+
+class StoolSlide(StoolSlideBase):
+    id: str
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+# Other Slide schemas
+class OtherSlideBase(BaseModel):
+    name: str
+    species: str
+    image_url: Optional[str] = None
+
+class OtherSlideCreate(OtherSlideBase):
+    pass
+
+class OtherSlide(OtherSlideBase):
     id: str
     created_at: datetime
     
