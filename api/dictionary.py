@@ -53,10 +53,10 @@ async def get_dictionary_words(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve dictionary words: {str(e)}")
 
-@router.get("/{word_id}", response_model=schemas.DictionaryWord)
-async def get_dictionary_word(word_id: str, db: Session = Depends(get_db)):
-    """Get a specific dictionary word by ID"""
-    word = crud.get_item(db, models.DictionaryWord, word_id)
+@router.get("/{word_name}", response_model=schemas.DictionaryWord)
+async def get_dictionary_word(word_name: str, db: Session = Depends(get_db)):
+    """Get a specific dictionary word by name"""
+    word = db.query(models.DictionaryWord).filter(models.DictionaryWord.name == word_name).first()
     if not word:
         raise HTTPException(status_code=404, detail="Dictionary word not found")
     return word
@@ -76,15 +76,15 @@ async def create_dictionary_word(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create dictionary word: {str(e)}")
 
-@router.put("/{word_id}", response_model=schemas.DictionaryWord)
+@router.put("/{word_name}", response_model=schemas.DictionaryWord)
 async def update_dictionary_word(
-    word_id: str,
+    word_name: str,
     word: schemas.DictionaryWordCreate,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
 ):
     """Update a dictionary word (admin only)"""
-    db_word = crud.get_item(db, models.DictionaryWord, word_id)
+    db_word = db.query(models.DictionaryWord).filter(models.DictionaryWord.name == word_name).first()
     if not db_word:
         raise HTTPException(status_code=404, detail="Dictionary word not found")
     
@@ -94,14 +94,14 @@ async def update_dictionary_word(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to update dictionary word: {str(e)}")
 
-@router.delete("/{word_id}")
+@router.delete("/{word_name}")
 async def delete_dictionary_word(
-    word_id: str,
+    word_name: str,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
 ):
     """Delete a dictionary word (admin only)"""
-    db_word = crud.get_item(db, models.DictionaryWord, word_id)
+    db_word = db.query(models.DictionaryWord).filter(models.DictionaryWord.name == word_name).first()
     if not db_word:
         raise HTTPException(status_code=404, detail="Dictionary word not found")
     
