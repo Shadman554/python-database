@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import List, Optional
@@ -24,25 +23,25 @@ async def get_stool_slides(
         query = db.query(models.StoolSlide)
         if species:
             query = query.filter(models.StoolSlide.species.ilike(f"%{species}%"))
-        
+
         slides = query.order_by(models.StoolSlide.created_at.desc()).offset(skip).limit(limit).all()
-        
+
         if species:
             total = query.count()
         else:
             total = crud.count_items(db, models.StoolSlide)
-            
+
         return create_paginated_response(slides, total, skip // limit + 1, limit)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve stool slides: {str(e)}")
 
-@router.get("/{slide_id}", response_model=schemas.StoolSlide)
-async def get_stool_slide(slide_id: str, db: Session = Depends(get_db)):
-    """Get a specific stool slide by ID"""
-    slide = crud.get_item(db, models.StoolSlide, slide_id)
-    if not slide:
+@router.get("/{slide_name}", response_model=schemas.StoolSlide)
+async def read_stool_slide(slide_name: str, db: Session = Depends(get_db)):
+    """Get a specific stool slide by name"""
+    db_slide = db.query(models.StoolSlide).filter(models.StoolSlide.name == slide_name).first()
+    if db_slide is None:
         raise HTTPException(status_code=404, detail="Stool slide not found")
-    return slide
+    return db_slide
 
 @router.post("/", response_model=schemas.StoolSlide)
 async def create_stool_slide(
@@ -59,37 +58,22 @@ async def create_stool_slide(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create stool slide: {str(e)}")
 
-@router.put("/{slide_id}", response_model=schemas.StoolSlide)
-async def update_stool_slide(
-    slide_id: str,
-    slide: schemas.StoolSlideCreate,
-    db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
-):
+@router.put("/{slide_name}", response_model=schemas.StoolSlide)
+async def update_stool_slide(slide_name: str, slide: schemas.StoolSlideCreate, db: Session = Depends(get_db),
+    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))):
     """Update a stool slide (admin only)"""
-    db_slide = crud.get_item(db, models.StoolSlide, slide_id)
-    if not db_slide:
+    db_slide = db.query(models.StoolSlide).filter(models.StoolSlide.name == slide_name).first()
+    if db_slide is None:
         raise HTTPException(status_code=404, detail="Stool slide not found")
-    
-    try:
-        updated_slide = crud.update_item(db, db_slide, slide.dict())
-        return updated_slide
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to update stool slide: {str(e)}")
+    slide_data = slide.dict(exclude_unset=True)
+    return crud.update_item(db, db_slide, slide_data)
 
-@router.delete("/{slide_id}")
-async def delete_stool_slide(
-    slide_id: str,
-    db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
-):
+@router.delete("/{slide_name}")
+async def delete_stool_slide(slide_name: str, db: Session = Depends(get_db),
+    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))):
     """Delete a stool slide (admin only)"""
-    db_slide = crud.get_item(db, models.StoolSlide, slide_id)
-    if not db_slide:
+    db_slide = db.query(models.StoolSlide).filter(models.StoolSlide.name == slide_name).first()
+    if db_slide is None:
         raise HTTPException(status_code=404, detail="Stool slide not found")
-    
-    try:
-        crud.delete_item(db, db_slide)
-        return {"message": "Stool slide deleted successfully"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to delete stool slide: {str(e)}")
+    crud.delete_item(db, db_slide)
+    return {"message": "Stool slide deleted successfully"}

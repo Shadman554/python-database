@@ -1,4 +1,4 @@
-
+# Updating API endpoints to use 'name' instead of 'id' for note lookups, updates, and deletes.
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import List, Optional
@@ -26,10 +26,10 @@ async def get_notes(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve notes: {str(e)}")
 
-@router.get("/{note_id}", response_model=schemas.Note)
-async def get_note(note_id: str, db: Session = Depends(get_db)):
-    """Get a specific note by ID"""
-    note = crud.get_item(db, models.Note, note_id)
+@router.get("/{note_name}", response_model=schemas.Note)
+async def get_note(note_name: str, db: Session = Depends(get_db)):
+    """Get a specific note by name"""
+    note = db.query(models.Note).filter(models.Note.name == note_name).first()
     if not note:
         raise HTTPException(status_code=404, detail="Note not found")
     return note
@@ -49,35 +49,35 @@ async def create_note(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create note: {str(e)}")
 
-@router.put("/{note_id}", response_model=schemas.Note)
+@router.put("/{note_name}", response_model=schemas.Note)
 async def update_note(
-    note_id: str,
+    note_name: str,
     note: schemas.NoteCreate,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
 ):
     """Update a note (admin only)"""
-    db_note = crud.get_item(db, models.Note, note_id)
+    db_note = db.query(models.Note).filter(models.Note.name == note_name).first()
     if not db_note:
         raise HTTPException(status_code=404, detail="Note not found")
-    
+
     try:
         updated_note = crud.update_item(db, db_note, note.dict())
         return updated_note
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to update note: {str(e)}")
 
-@router.delete("/{note_id}")
+@router.delete("/{note_name}")
 async def delete_note(
-    note_id: str,
+    note_name: str,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
 ):
     """Delete a note (admin only)"""
-    db_note = crud.get_item(db, models.Note, note_id)
+    db_note = db.query(models.Note).filter(models.Note.name == note_name).first()
     if not db_note:
         raise HTTPException(status_code=404, detail="Note not found")
-    
+
     try:
         crud.delete_item(db, db_note)
         return {"message": "Note deleted successfully"}

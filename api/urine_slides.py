@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import List, Optional
@@ -24,25 +23,25 @@ async def get_urine_slides(
         query = db.query(models.UrineSlide)
         if species:
             query = query.filter(models.UrineSlide.species.ilike(f"%{species}%"))
-        
+
         slides = query.order_by(models.UrineSlide.created_at.desc()).offset(skip).limit(limit).all()
-        
+
         if species:
             total = query.count()
         else:
             total = crud.count_items(db, models.UrineSlide)
-            
+
         return create_paginated_response(slides, total, skip // limit + 1, limit)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve urine slides: {str(e)}")
 
-@router.get("/{slide_id}", response_model=schemas.UrineSlide)
-async def get_urine_slide(slide_id: str, db: Session = Depends(get_db)):
-    """Get a specific urine slide by ID"""
-    slide = crud.get_item(db, models.UrineSlide, slide_id)
-    if not slide:
+@router.get("/{slide_name}", response_model=schemas.UrineSlide)
+async def read_urine_slide(slide_name: str, db: Session = Depends(get_db)):
+    """Get a specific urine slide by name"""
+    db_slide = db.query(models.UrineSlide).filter(models.UrineSlide.name == slide_name).first()
+    if db_slide is None:
         raise HTTPException(status_code=404, detail="Urine slide not found")
-    return slide
+    return db_slide
 
 @router.post("/", response_model=schemas.UrineSlide)
 async def create_urine_slide(
@@ -59,35 +58,35 @@ async def create_urine_slide(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create urine slide: {str(e)}")
 
-@router.put("/{slide_id}", response_model=schemas.UrineSlide)
+@router.put("/{slide_name}", response_model=schemas.UrineSlide)
 async def update_urine_slide(
-    slide_id: str,
+    slide_name: str,
     slide: schemas.UrineSlideCreate,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
 ):
     """Update a urine slide (admin only)"""
-    db_slide = crud.get_item(db, models.UrineSlide, slide_id)
+    db_slide = db.query(models.UrineSlide).filter(models.UrineSlide.name == slide_name).first()
     if not db_slide:
         raise HTTPException(status_code=404, detail="Urine slide not found")
-    
+
     try:
         updated_slide = crud.update_item(db, db_slide, slide.dict())
         return updated_slide
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to update urine slide: {str(e)}")
 
-@router.delete("/{slide_id}")
+@router.delete("/{slide_name}")
 async def delete_urine_slide(
-    slide_id: str,
+    slide_name: str,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
 ):
     """Delete a urine slide (admin only)"""
-    db_slide = crud.get_item(db, models.UrineSlide, slide_id)
+    db_slide = db.query(models.UrineSlide).filter(models.UrineSlide.name == slide_name).first()
     if not db_slide:
         raise HTTPException(status_code=404, detail="Urine slide not found")
-    
+
     try:
         crud.delete_item(db, db_slide)
         return {"message": "Urine slide deleted successfully"}
