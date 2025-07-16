@@ -43,10 +43,10 @@ async def get_normal_ranges(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve normal ranges: {str(e)}")
 
-@router.get("/{range_id}", response_model=schemas.NormalRange)
-async def get_normal_range(range_id: str, db: Session = Depends(get_db)):
-    """Get a specific normal range by ID"""
-    range_item = crud.get_item(db, models.NormalRange, range_id)
+@router.get("/{range_name}", response_model=schemas.NormalRange)
+async def get_normal_range(range_name: str, db: Session = Depends(get_db)):
+    """Get a specific normal range by name"""
+    range_item = db.query(models.NormalRange).filter(models.NormalRange.name == range_name).first()
     if not range_item:
         raise HTTPException(status_code=404, detail="Normal range not found")
     return range_item
@@ -66,15 +66,15 @@ async def create_normal_range(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create normal range: {str(e)}")
 
-@router.put("/{range_id}", response_model=schemas.NormalRange)
+@router.put("/{range_name}", response_model=schemas.NormalRange)
 async def update_normal_range(
-    range_id: str,
+    range_name: str,
     normal_range: schemas.NormalRangeCreate,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
 ):
     """Update a normal range (admin only)"""
-    db_range = crud.get_item(db, models.NormalRange, range_id)
+    db_range = db.query(models.NormalRange).filter(models.NormalRange.name == range_name).first()
     if not db_range:
         raise HTTPException(status_code=404, detail="Normal range not found")
     
@@ -84,14 +84,14 @@ async def update_normal_range(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to update normal range: {str(e)}")
 
-@router.delete("/{range_id}")
+@router.delete("/{range_name}")
 async def delete_normal_range(
-    range_id: str,
+    range_name: str,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
 ):
     """Delete a normal range (admin only)"""
-    db_range = crud.get_item(db, models.NormalRange, range_id)
+    db_range = db.query(models.NormalRange).filter(models.NormalRange.name == range_name).first()
     if not db_range:
         raise HTTPException(status_code=404, detail="Normal range not found")
     

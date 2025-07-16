@@ -25,10 +25,10 @@ async def get_notifications(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve notifications: {str(e)}")
 
-@router.get("/{notification_id}", response_model=schemas.Notification)
-async def get_notification(notification_id: str, db: Session = Depends(get_db)):
-    """Get a specific notification by ID"""
-    notification = crud.get_item(db, models.Notification, notification_id)
+@router.get("/{notification_title}", response_model=schemas.Notification)
+async def get_notification(notification_title: str, db: Session = Depends(get_db)):
+    """Get a specific notification by title"""
+    notification = db.query(models.Notification).filter(models.Notification.title == notification_title).first()
     if not notification:
         raise HTTPException(status_code=404, detail="Notification not found")
     return notification
@@ -48,15 +48,15 @@ async def create_notification(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create notification: {str(e)}")
 
-@router.put("/{notification_id}", response_model=schemas.Notification)
+@router.put("/{notification_title}", response_model=schemas.Notification)
 async def update_notification(
-    notification_id: str,
+    notification_title: str,
     notification: schemas.NotificationCreate,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
 ):
     """Update a notification (admin only)"""
-    db_notification = crud.get_item(db, models.Notification, notification_id)
+    db_notification = db.query(models.Notification).filter(models.Notification.title == notification_title).first()
     if not db_notification:
         raise HTTPException(status_code=404, detail="Notification not found")
     
@@ -66,14 +66,14 @@ async def update_notification(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to update notification: {str(e)}")
 
-@router.delete("/{notification_id}")
+@router.delete("/{notification_title}")
 async def delete_notification(
-    notification_id: str,
+    notification_title: str,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
 ):
     """Delete a notification (admin only)"""
-    db_notification = crud.get_item(db, models.Notification, notification_id)
+    db_notification = db.query(models.Notification).filter(models.Notification.title == notification_title).first()
     if not db_notification:
         raise HTTPException(status_code=404, detail="Notification not found")
     

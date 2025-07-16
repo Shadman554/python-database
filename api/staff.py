@@ -33,10 +33,10 @@ async def get_staff(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve staff: {str(e)}")
 
-@router.get("/{staff_id}", response_model=schemas.Staff)
-async def get_staff_member(staff_id: str, db: Session = Depends(get_db)):
-    """Get a specific staff member by ID"""
-    staff = crud.get_item(db, models.Staff, staff_id)
+@router.get("/{staff_name}", response_model=schemas.Staff)
+async def get_staff_member(staff_name: str, db: Session = Depends(get_db)):
+    """Get a specific staff member by name"""
+    staff = db.query(models.Staff).filter(models.Staff.name == staff_name).first()
     if not staff:
         raise HTTPException(status_code=404, detail="Staff member not found")
     return staff
@@ -56,15 +56,15 @@ async def create_staff(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create staff member: {str(e)}")
 
-@router.put("/{staff_id}", response_model=schemas.Staff)
+@router.put("/{staff_name}", response_model=schemas.Staff)
 async def update_staff(
-    staff_id: str,
+    staff_name: str,
     staff: schemas.StaffCreate,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
 ):
     """Update a staff member (admin only)"""
-    db_staff = crud.get_item(db, models.Staff, staff_id)
+    db_staff = db.query(models.Staff).filter(models.Staff.name == staff_name).first()
     if not db_staff:
         raise HTTPException(status_code=404, detail="Staff member not found")
     
@@ -74,14 +74,14 @@ async def update_staff(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to update staff member: {str(e)}")
 
-@router.delete("/{staff_id}")
+@router.delete("/{staff_name}")
 async def delete_staff(
-    staff_id: str,
+    staff_name: str,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
 ):
     """Delete a staff member (admin only)"""
-    db_staff = crud.get_item(db, models.Staff, staff_id)
+    db_staff = db.query(models.Staff).filter(models.Staff.name == staff_name).first()
     if not db_staff:
         raise HTTPException(status_code=404, detail="Staff member not found")
     

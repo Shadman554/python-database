@@ -25,10 +25,10 @@ async def get_app_links(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve app links: {str(e)}")
 
-@router.get("/{link_id}", response_model=schemas.AppLink)
-async def get_app_link(link_id: str, db: Session = Depends(get_db)):
-    """Get a specific app link by ID"""
-    link = crud.get_item(db, models.AppLink, link_id)
+@router.get("/{link_title}", response_model=schemas.AppLink)
+async def get_app_link(link_title: str, db: Session = Depends(get_db)):
+    """Get a specific app link by title"""
+    link = db.query(models.AppLink).filter(models.AppLink.title == link_title).first()
     if not link:
         raise HTTPException(status_code=404, detail="App link not found")
     return link
@@ -48,15 +48,15 @@ async def create_app_link(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create app link: {str(e)}")
 
-@router.put("/{link_id}", response_model=schemas.AppLink)
+@router.put("/{link_title}", response_model=schemas.AppLink)
 async def update_app_link(
-    link_id: str,
+    link_title: str,
     app_link: schemas.AppLinkCreate,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
 ):
     """Update an app link (admin only)"""
-    db_link = crud.get_item(db, models.AppLink, link_id)
+    db_link = db.query(models.AppLink).filter(models.AppLink.title == link_title).first()
     if not db_link:
         raise HTTPException(status_code=404, detail="App link not found")
     
@@ -66,14 +66,14 @@ async def update_app_link(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to update app link: {str(e)}")
 
-@router.delete("/{link_id}")
+@router.delete("/{link_title}")
 async def delete_app_link(
-    link_id: str,
+    link_title: str,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
 ):
     """Delete an app link (admin only)"""
-    db_link = crud.get_item(db, models.AppLink, link_id)
+    db_link = db.query(models.AppLink).filter(models.AppLink.title == link_title).first()
     if not db_link:
         raise HTTPException(status_code=404, detail="App link not found")
     

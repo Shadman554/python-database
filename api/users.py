@@ -32,27 +32,27 @@ async def get_users(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve users: {str(e)}")
 
-@router.get("/{user_id}", response_model=schemas.User)
+@router.get("/{username}", response_model=schemas.User)
 async def get_user(
-    user_id: str,
+    username: str,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
 ):
-    """Get a specific user by ID (admin only)"""
-    user = crud.get_item(db, models.User, user_id)
+    """Get a specific user by username (admin only)"""
+    user = db.query(models.User).filter(models.User.username == username).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-@router.put("/{user_id}", response_model=schemas.User)
+@router.put("/{username}", response_model=schemas.User)
 async def update_user(
-    user_id: str,
+    username: str,
     user_update: schemas.UserBase,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
 ):
     """Update a user (admin only)"""
-    db_user = crud.get_item(db, models.User, user_id)
+    db_user = db.query(models.User).filter(models.User.username == username).first()
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
     
@@ -62,14 +62,14 @@ async def update_user(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to update user: {str(e)}")
 
-@router.delete("/{user_id}")
+@router.delete("/{username}")
 async def delete_user(
-    user_id: str,
+    username: str,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
 ):
     """Delete a user (admin only)"""
-    db_user = crud.get_item(db, models.User, user_id)
+    db_user = db.query(models.User).filter(models.User.username == username).first()
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
     
@@ -79,18 +79,19 @@ async def delete_user(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to delete user: {str(e)}")
 
-@router.post("/{user_id}/points")
+@router.post("/{username}/points")
 async def add_user_points(
-    user_id: str,
+    username: str,
     points: int,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
 ):
     """Add points to a user (admin only)"""
     try:
-        updated_user = crud.update_user_points(db, user_id, points)
-        if not updated_user:
+        db_user = db.query(models.User).filter(models.User.username == username).first()
+        if not db_user:
             raise HTTPException(status_code=404, detail="User not found")
+        updated_user = crud.update_user_points(db, db_user.id, points)
         return {"message": f"Added {points} points to user", "total_points": updated_user.total_points}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to add points: {str(e)}")
