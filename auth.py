@@ -12,7 +12,8 @@ pwd_context = CryptContext(
     schemes=["bcrypt"], 
     deprecated="auto",
     bcrypt__rounds=12,
-    bcrypt__ident="2b"
+    bcrypt__ident="2b",
+    bcrypt__default_rounds=12
 )
 
 # JWT settings
