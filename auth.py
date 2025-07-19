@@ -61,6 +61,14 @@ def verify_token(credentials: HTTPAuthorizationCredentials, db: Session):
 def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security), db: Session = Depends(get_db)):
     return verify_token(credentials, db)
 
+def authenticate_user(db: Session, username: str, password: str):
+    user = db.query(models.User).filter(models.User.username == username).first()
+    if not user:
+        return False
+    if not verify_password(password, user.hashed_password):
+        return False
+    return user
+
 def get_current_admin_user(credentials: HTTPAuthorizationCredentials = Depends(security), db: Session = Depends(get_db)):
     user = verify_token(credentials, db)
     if not user.is_admin:
