@@ -1,12 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import HTTPBearer
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from typing import List, Optional
 import models
 import schemas
 import crud
 from database import get_db
-from auth import get_current_admin_user, get_current_user
+from auth import get_current_user, get_current_admin_user
 import uuid
 
 router = APIRouter()
