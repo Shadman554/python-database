@@ -139,9 +139,10 @@ async def test_database(db: Session = Depends(get_db)):
         }
 
 if __name__ == "__main__":
+    port = int(os.getenv("PORT", 5000))
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
-        port=5000,
-        reload=True
+        port=port,
+        reload=False  # Disable reload in production
     )
