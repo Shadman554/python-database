@@ -6,15 +6,13 @@ import schemas
 import crud
 from database import get_db
 from auth import get_current_user, get_current_admin_user, security
+from utils import create_paginated_response
 # Dependency function for admin authentication
 def get_admin_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
     db: Session = Depends(get_db)
 ):
     return get_current_admin_user(credentials, db)
-
-from utils import create_paginated_response
-
 router = APIRouter()
 
 @router.get("/me", response_model=schemas.User)

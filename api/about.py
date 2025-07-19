@@ -5,15 +5,13 @@ import schemas
 import crud
 from database import get_db
 from auth import get_current_admin_user, security
+import uuid
 # Dependency function for admin authentication
 def get_admin_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
     db: Session = Depends(get_db)
 ):
     return get_current_admin_user(credentials, db)
-
-import uuid
-
 router = APIRouter()
 
 @router.get("/", response_model=schemas.About)
