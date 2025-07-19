@@ -14,24 +14,38 @@ def get_items(db: Session, model, skip: int = 0, limit: int = 100):
     return db.query(model).offset(skip).limit(limit).all()
 
 def create_item(db: Session, model, item_data: dict):
-    if 'id' not in item_data:
-        item_data['id'] = str(uuid.uuid4())
-    db_item = model(**item_data)
-    db.add(db_item)
-    db.commit()
-    db.refresh(db_item)
-    return db_item
+    try:
+        if 'id' not in item_data:
+            item_data['id'] = str(uuid.uuid4())
+        db_item = model(**item_data)
+        db.add(db_item)
+        db.commit()
+        db.refresh(db_item)
+        return db_item
+    except Exception as e:
+        db.rollback()
+        raise e
 
 def update_item(db: Session, db_item, item_data: dict):
-    for key, value in item_data.items():
-        setattr(db_item, key, value)
-    db.commit()
-    db.refresh(db_item)
-    return db_item
+    try:
+        for key, value in item_data.items():
+            if hasattr(db_item, key):
+                setattr(db_item, key, value)
+        db.commit()
+        db.refresh(db_item)
+        return db_item
+    except Exception as e:
+        db.rollback()
+        raise e
 
 def delete_item(db: Session, db_item):
-    db.delete(db_item)
-    db.commit()
+    try:
+        db.delete(db_item)
+        db.commit()
+        return True
+    except Exception as e:
+        db.rollback()
+        raise e
 
 # User CRUD
 def get_user_by_username(db: Session, username: str):

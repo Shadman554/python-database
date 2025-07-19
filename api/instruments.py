@@ -1,15 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import HTTPBearer
 from sqlalchemy.orm import Session
 from typing import List, Optional
 import models
 import schemas
 import crud
 from database import get_db
-from auth import get_current_admin_user, security
-from utils import create_paginated_response
+from auth import get_current_admin_user, get_current_user
 import uuid
 
 router = APIRouter()
+security = HTTPBearer()
 
 @router.get("/", response_model=schemas.PaginatedResponse)
 async def get_instruments(
