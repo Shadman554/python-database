@@ -7,8 +7,13 @@ from passlib.context import CryptContext
 import models
 from database import get_db
 
-# Password hashing
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Password hashing - Railway compatible configuration
+pwd_context = CryptContext(
+    schemes=["bcrypt"], 
+    deprecated="auto",
+    bcrypt__rounds=12,
+    bcrypt__ident="2b"
+)
 
 # JWT settings
 SECRET_KEY = "your-secret-key-here"  # Change this in production
