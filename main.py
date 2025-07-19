@@ -6,8 +6,13 @@ from typing import List, Optional
 import uvicorn
 import os
 
-from database import engine, get_db
-from models import Base
+try:
+    from database import engine, get_db
+    from models import Base
+except ImportError as e:
+    print(f"Database import error: {e}")
+    print("This might be due to missing environment variables or dependencies")
+    raise e
 from api import (
     auth as auth_api, users, books, diseases, drugs, dictionary, questions, 
     notifications, staff, normal_ranges, 
