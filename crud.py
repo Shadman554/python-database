@@ -17,12 +17,16 @@ def create_item(db: Session, model, item_data: dict):
     try:
         if 'id' not in item_data:
             item_data['id'] = str(uuid.uuid4())
+        
+        print(f"🔧 Creating {model.__name__} with data: {item_data}")
         db_item = model(**item_data)
         db.add(db_item)
         db.commit()
         db.refresh(db_item)
+        print(f"✅ Successfully created {model.__name__} with ID: {db_item.id}")
         return db_item
     except Exception as e:
+        print(f"❌ Error creating {model.__name__}: {e}")
         db.rollback()
         raise e
 
