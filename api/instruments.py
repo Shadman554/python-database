@@ -6,6 +6,10 @@ import schemas
 import crud
 from database import get_db
 from auth import get_current_admin_user, security
+# Dependency function for admin authentication
+def get_admin_user(db: Session = Depends(get_db)):
+    return get_current_admin_user(security, db)
+
 from utils import create_paginated_response
 import uuid
 
@@ -37,7 +41,7 @@ async def read_instrument(instrument_name: str, db: Session = Depends(get_db)):
 async def create_instrument(
     instrument: schemas.InstrumentCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Create a new instrument (admin only)"""
     try:
@@ -50,7 +54,7 @@ async def create_instrument(
 
 @router.put("/{instrument_name}", response_model=schemas.Instrument)
 async def update_instrument(instrument_name: str, instrument: schemas.InstrumentCreate, db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))):
+    current_user: models.User = Depends(get_admin_user)):
     """Update an instrument (admin only)"""
     db_instrument = db.query(models.Instrument).filter(models.Instrument.name == instrument_name).first()
     if db_instrument is None:
@@ -65,7 +69,7 @@ async def update_instrument(instrument_name: str, instrument: schemas.Instrument
 
 @router.delete("/{instrument_name}")
 async def delete_instrument(instrument_name: str, db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))):
+    current_user: models.User = Depends(get_admin_user)):
     """Delete an instrument (admin only)"""
     db_instrument = db.query(models.Instrument).filter(models.Instrument.name == instrument_name).first()
     if db_instrument is None:

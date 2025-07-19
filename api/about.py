@@ -5,6 +5,10 @@ import schemas
 import crud
 from database import get_db
 from auth import get_current_admin_user, security
+# Dependency function for admin authentication
+def get_admin_user(db: Session = Depends(get_db)):
+    return get_current_admin_user(security, db)
+
 import uuid
 
 router = APIRouter()
@@ -24,7 +28,7 @@ async def get_about(db: Session = Depends(get_db)):
 async def create_about(
     about: schemas.AboutCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Create about information (admin only)"""
     try:
@@ -44,7 +48,7 @@ async def create_about(
 async def update_about(
     about: schemas.AboutCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Update about information (admin only)"""
     try:
@@ -60,7 +64,7 @@ async def update_about(
 @router.delete("/")
 async def delete_about(
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Delete about information (admin only)"""
     try:

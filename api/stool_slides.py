@@ -6,6 +6,10 @@ import schemas
 import crud
 from database import get_db
 from auth import get_current_admin_user, security
+# Dependency function for admin authentication
+def get_admin_user(db: Session = Depends(get_db)):
+    return get_current_admin_user(security, db)
+
 from utils import create_paginated_response
 import uuid
 
@@ -47,7 +51,7 @@ async def read_stool_slide(slide_name: str, db: Session = Depends(get_db)):
 async def create_stool_slide(
     slide: schemas.StoolSlideCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Create a new stool slide (admin only)"""
     try:
@@ -60,7 +64,7 @@ async def create_stool_slide(
 
 @router.put("/{slide_name}", response_model=schemas.StoolSlide)
 async def update_stool_slide(slide_name: str, slide: schemas.StoolSlideCreate, db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))):
+    current_user: models.User = Depends(get_admin_user)):
     """Update a stool slide (admin only)"""
     db_slide = db.query(models.StoolSlide).filter(models.StoolSlide.name == slide_name).first()
     if db_slide is None:
@@ -70,7 +74,7 @@ async def update_stool_slide(slide_name: str, slide: schemas.StoolSlideCreate, d
 
 @router.delete("/{slide_name}")
 async def delete_stool_slide(slide_name: str, db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))):
+    current_user: models.User = Depends(get_admin_user)):
     """Delete a stool slide (admin only)"""
     db_slide = db.query(models.StoolSlide).filter(models.StoolSlide.name == slide_name).first()
     if db_slide is None:

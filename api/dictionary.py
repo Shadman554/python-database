@@ -6,6 +6,10 @@ import schemas
 import crud
 from database import get_db
 from auth import get_current_user, get_current_admin_user, security
+# Dependency function for admin authentication
+def get_admin_user(db: Session = Depends(get_db)):
+    return get_current_admin_user(security, db)
+
 from utils import create_paginated_response
 import uuid
 
@@ -65,7 +69,7 @@ async def get_dictionary_word(word_name: str, db: Session = Depends(get_db)):
 async def create_dictionary_word(
     word: schemas.DictionaryWordCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Create a new dictionary word (admin only)"""
     try:
@@ -81,7 +85,7 @@ async def update_dictionary_word(
     word_name: str,
     word: schemas.DictionaryWordCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Update a dictionary word (admin only)"""
     db_word = db.query(models.DictionaryWord).filter(models.DictionaryWord.name == word_name).first()
@@ -98,7 +102,7 @@ async def update_dictionary_word(
 async def delete_dictionary_word(
     word_name: str,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Delete a dictionary word (admin only)"""
     db_word = db.query(models.DictionaryWord).filter(models.DictionaryWord.name == word_name).first()

@@ -6,6 +6,10 @@ import schemas
 import crud
 from database import get_db
 from auth import get_current_admin_user, security
+# Dependency function for admin authentication
+def get_admin_user(db: Session = Depends(get_db)):
+    return get_current_admin_user(security, db)
+
 from utils import create_paginated_response
 import uuid
 
@@ -55,7 +59,7 @@ async def get_normal_range(range_name: str, db: Session = Depends(get_db)):
 async def create_normal_range(
     normal_range: schemas.NormalRangeCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Create a new normal range (admin only)"""
     try:
@@ -71,7 +75,7 @@ async def update_normal_range(
     range_name: str,
     normal_range: schemas.NormalRangeCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Update a normal range (admin only)"""
     db_range = db.query(models.NormalRange).filter(models.NormalRange.name == range_name).first()
@@ -88,7 +92,7 @@ async def update_normal_range(
 async def delete_normal_range(
     range_name: str,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Delete a normal range (admin only)"""
     db_range = db.query(models.NormalRange).filter(models.NormalRange.name == range_name).first()

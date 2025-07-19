@@ -6,6 +6,10 @@ import schemas
 import crud
 from database import get_db
 from auth import get_current_admin_user, security
+# Dependency function for admin authentication
+def get_admin_user(db: Session = Depends(get_db)):
+    return get_current_admin_user(security, db)
+
 from utils import create_paginated_response
 import uuid
 
@@ -51,7 +55,7 @@ async def get_disease(disease_name: str, db: Session = Depends(get_db)):
 async def create_disease(
     disease: schemas.DiseaseCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Create a new disease (admin only)"""
     try:
@@ -67,7 +71,7 @@ async def update_disease(
     disease_name: str,
     disease: schemas.DiseaseCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Update a disease (admin only)"""
     db_disease = db.query(models.Disease).filter(models.Disease.name == disease_name).first()
@@ -84,7 +88,7 @@ async def update_disease(
 async def delete_disease(
     disease_name: str,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Delete a disease (admin only)"""
     db_disease = db.query(models.Disease).filter(models.Disease.name == disease_name).first()

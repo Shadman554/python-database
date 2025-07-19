@@ -6,6 +6,10 @@ import schemas
 import crud
 from database import get_db
 from auth import get_current_admin_user, security
+# Dependency function for admin authentication
+def get_admin_user(db: Session = Depends(get_db)):
+    return get_current_admin_user(security, db)
+
 from utils import create_paginated_response
 import uuid
 
@@ -37,7 +41,7 @@ async def get_app_link(link_title: str, db: Session = Depends(get_db)):
 async def create_app_link(
     app_link: schemas.AppLinkCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Create a new app link (admin only)"""
     try:
@@ -53,7 +57,7 @@ async def update_app_link(
     link_title: str,
     app_link: schemas.AppLinkCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Update an app link (admin only)"""
     db_link = db.query(models.AppLink).filter(models.AppLink.title == link_title).first()
@@ -70,7 +74,7 @@ async def update_app_link(
 async def delete_app_link(
     link_title: str,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Delete an app link (admin only)"""
     db_link = db.query(models.AppLink).filter(models.AppLink.title == link_title).first()

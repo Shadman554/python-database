@@ -6,6 +6,10 @@ import schemas
 import crud
 from database import get_db
 from auth import get_current_admin_user, security
+# Dependency function for admin authentication
+def get_admin_user(db: Session = Depends(get_db)):
+    return get_current_admin_user(security, db)
+
 from utils import create_paginated_response
 import uuid
 
@@ -37,7 +41,7 @@ async def get_notification(notification_title: str, db: Session = Depends(get_db
 async def create_notification(
     notification: schemas.NotificationCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Create a new notification (admin only)"""
     try:
@@ -53,7 +57,7 @@ async def update_notification(
     notification_title: str,
     notification: schemas.NotificationCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Update a notification (admin only)"""
     db_notification = db.query(models.Notification).filter(models.Notification.title == notification_title).first()
@@ -70,7 +74,7 @@ async def update_notification(
 async def delete_notification(
     notification_title: str,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Delete a notification (admin only)"""
     db_notification = db.query(models.Notification).filter(models.Notification.title == notification_title).first()

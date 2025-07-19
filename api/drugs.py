@@ -6,6 +6,10 @@ import schemas
 import crud
 from database import get_db
 from auth import get_current_admin_user, security
+# Dependency function for admin authentication
+def get_admin_user(db: Session = Depends(get_db)):
+    return get_current_admin_user(security, db)
+
 from utils import create_paginated_response
 import uuid
 
@@ -55,7 +59,7 @@ async def get_drug(drug_name: str, db: Session = Depends(get_db)):
 async def create_drug(
     drug: schemas.DrugCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Create a new drug (admin only)"""
     try:
@@ -71,7 +75,7 @@ async def update_drug(
     drug_name: str,
     drug: schemas.DrugCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Update a drug (admin only)"""
     db_drug = db.query(models.Drug).filter(models.Drug.name == drug_name).first()
@@ -88,7 +92,7 @@ async def update_drug(
 async def delete_drug(
     drug_name: str,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Delete a drug (admin only)"""
     db_drug = db.query(models.Drug).filter(models.Drug.name == drug_name).first()

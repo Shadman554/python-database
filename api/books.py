@@ -6,6 +6,10 @@ import schemas
 import crud
 from database import get_db
 from auth import get_current_user, get_current_admin_user, security
+
+# Dependency function for admin authentication
+def get_admin_user(db: Session = Depends(get_db)):
+    return get_current_admin_user(security, db)
 from utils import save_file, create_paginated_response
 import uuid
 
@@ -55,7 +59,7 @@ async def get_book(book_title: str, db: Session = Depends(get_db)):
 async def create_book(
     book: schemas.BookCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Create a new book (admin only)"""
     try:
@@ -71,7 +75,7 @@ async def update_book(
     book_title: str,
     book: schemas.BookCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Update a book (admin only)"""
     db_book = db.query(models.Book).filter(models.Book.title == book_title).first()
@@ -88,7 +92,7 @@ async def update_book(
 async def delete_book(
     book_title: str,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Delete a book (admin only)"""
     db_book = db.query(models.Book).filter(models.Book.title == book_title).first()
@@ -106,7 +110,7 @@ async def upload_book_cover(
     book_title: str,
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Upload book cover image (admin only)"""
     db_book = db.query(models.Book).filter(models.Book.title == book_title).first()

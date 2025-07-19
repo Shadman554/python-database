@@ -6,6 +6,10 @@ import schemas
 import crud
 from database import get_db
 from auth import get_current_admin_user, security
+# Dependency function for admin authentication
+def get_admin_user(db: Session = Depends(get_db)):
+    return get_current_admin_user(security, db)
+
 from utils import create_paginated_response
 import uuid
 
@@ -47,7 +51,7 @@ async def get_other_slide(slide_name: str, db: Session = Depends(get_db)):
 async def create_other_slide(
     slide: schemas.OtherSlideCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Create a new other slide (admin only)"""
     try:
@@ -63,7 +67,7 @@ async def update_other_slide(
     slide_name: str,
     slide: schemas.OtherSlideCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Update an other slide (admin only)"""
     db_slide = db.query(models.OtherSlide).filter(models.OtherSlide.name == slide_name).first()
@@ -80,7 +84,7 @@ async def update_other_slide(
 async def delete_other_slide(
     slide_name: str,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_admin_user)
 ):
     """Delete an other slide (admin only)"""
     db_slide = db.query(models.OtherSlide).filter(models.OtherSlide.name == slide_name).first()
