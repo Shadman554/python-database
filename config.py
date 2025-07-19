@@ -1,5 +1,6 @@
+
 import os
-from decouple import config
+from decouple import config as decouple_config
 
 class Settings:
     def __init__(self):
@@ -7,9 +8,22 @@ class Settings:
         self.DATABASE_URL = self._get_database_url()
 
         # JWT Configuration
-        self.SECRET_KEY: str = config('SECRET_KEY', default='your-secret-key-here-change-in-production')
+        self.SECRET_KEY: str = decouple_config('SECRET_KEY', default='your-secret-key-here-change-in-production')
         self.ALGORITHM: str = "HS256"
         self.ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+
+        # File upload
+        self.UPLOAD_DIR = decouple_config('UPLOAD_DIR', default='uploads')
+        self.MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
+        self.ALLOWED_EXTENSIONS = {'.pdf', '.jpg', '.jpeg', '.png', '.gif'}
+        
+        # Pagination
+        self.DEFAULT_PAGE_SIZE = 20
+        self.MAX_PAGE_SIZE = 100
+        
+        # Rate limiting
+        self.RATE_LIMIT_REQUESTS = 100
+        self.RATE_LIMIT_WINDOW = 3600  # 1 hour
 
     def _get_database_url(self) -> str:
         """Get database URL from various possible environment variables"""
@@ -22,7 +36,7 @@ class Settings:
         ]
 
         for source in url_sources:
-            url = config(source, default=None)
+            url = decouple_config(source, default=None)
             if url and url.strip():
                 print(f"✅ Found database URL from {source}")
                 return url
