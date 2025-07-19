@@ -93,6 +93,45 @@ async def root():
 async def health_check():
     return {"status": "healthy", "database": "connected"}
 
+@app.get("/test-db")
+async def test_database(db: Session = Depends(get_db)):
+    """Test database connection and write operations"""
+    try:
+        # Test read
+        result = db.execute("SELECT version()").fetchone()
+        
+        # Test write (create a temporary record)
+        from models import Book
+        import uuid
+        
+        test_book = Book(
+            id=str(uuid.uuid4()),
+            title="Test Connection",
+            description="Testing database write",
+            category="Test"
+        )
+        
+        db.add(test_book)
+        db.commit()
+        db.refresh(test_book)
+        
+        # Clean up
+        db.delete(test_book)
+        db.commit()
+        
+        return {
+            "status": "success",
+            "database_version": result[0] if result else "unknown",
+            "write_test": "passed",
+            "message": "Database read/write operations working"
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e),
+            "message": "Database operation failed"
+        }
+
 if __name__ == "__main__":
     uvicorn.run(
         "main:app",

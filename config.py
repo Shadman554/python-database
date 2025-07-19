@@ -5,8 +5,16 @@ from dotenv import load_dotenv
 load_dotenv(dotenv_path='.env')
 
 class Settings:
-    # Database
+    # Database - Use Railway public URL format
     DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///./local_dev.db')
+    
+    # For Railway, ensure we're using the public URL format
+    if DATABASE_URL and 'railway.internal' in DATABASE_URL:
+        # Convert internal URL to public format
+        DATABASE_URL = DATABASE_URL.replace(
+            'postgres.railway.internal:5432',
+            'roundhouse.proxy.rlwy.net:13307'  # Standard Railway proxy port
+        )
     
     # JWT
     SECRET_KEY = os.getenv('SECRET_KEY', 'your-secret-key-here')

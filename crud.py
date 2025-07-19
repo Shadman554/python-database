@@ -21,8 +21,12 @@ def create_item(db: Session, model, item_data: dict):
         print(f"🔧 Creating {model.__name__} with data: {item_data}")
         
         # Test database connection first
-        db.execute("SELECT 1")
-        print(f"📡 Database connection verified")
+        result = db.execute("SELECT 1")
+        print(f"📡 Database connection verified: {result.fetchone()}")
+        
+        # Test if we can write to database
+        db.execute("SELECT version()")
+        print(f"📡 Database write access verified")
         
         db_item = model(**item_data)
         db.add(db_item)
@@ -45,6 +49,8 @@ def create_item(db: Session, model, item_data: dict):
         return db_item
     except Exception as e:
         print(f"❌ Error creating {model.__name__}: {e}")
+        print(f"❌ Error type: {type(e).__name__}")
+        print(f"❌ Database URL: {db.get_bind().url}")
         import traceback
         traceback.print_exc()
         db.rollback()
