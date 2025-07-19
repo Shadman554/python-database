@@ -19,14 +19,34 @@ def create_item(db: Session, model, item_data: dict):
             item_data['id'] = str(uuid.uuid4())
         
         print(f"🔧 Creating {model.__name__} with data: {item_data}")
+        
+        # Test database connection first
+        db.execute("SELECT 1")
+        print(f"📡 Database connection verified")
+        
         db_item = model(**item_data)
         db.add(db_item)
+        
+        print(f"💾 Item added to session, committing...")
         db.commit()
+        
+        print(f"🔄 Refreshing item...")
         db.refresh(db_item)
+        
         print(f"✅ Successfully created {model.__name__} with ID: {db_item.id}")
+        
+        # Verify the item was actually saved
+        verification = db.query(model).filter(model.id == db_item.id).first()
+        if verification:
+            print(f"✅ Verification successful: Item exists in database")
+        else:
+            print(f"⚠️ Warning: Item not found in verification query")
+        
         return db_item
     except Exception as e:
         print(f"❌ Error creating {model.__name__}: {e}")
+        import traceback
+        traceback.print_exc()
         db.rollback()
         raise e
 
