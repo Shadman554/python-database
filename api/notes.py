@@ -1,5 +1,5 @@
 # Updating API endpoints to use 'name' instead of 'id' for note lookups, updates, and deletes.
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depe\nfrom fastapi.security import HTTPAuthorizationCredentialsnds, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import List, Optional
 import models
@@ -8,8 +8,11 @@ import crud
 from database import get_db
 from auth import get_current_admin_user, security
 # Dependency function for admin authentication
-def get_admin_user(db: Session = Depends(get_db)):
-    return get_current_admin_user(security, db)
+def get_admin_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db)
+):
+    return get_current_admin_user(credentials, db)
 
 from utils import create_paginated_response
 import uuid

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depe\nfrom fastapi.security import HTTPAuthorizationCredentialsnds, HTTPException
 from sqlalchemy.orm import Session
 import models
 import schemas
@@ -6,8 +6,11 @@ import crud
 from database import get_db
 from auth import get_current_admin_user, security
 # Dependency function for admin authentication
-def get_admin_user(db: Session = Depends(get_db)):
-    return get_current_admin_user(security, db)
+def get_admin_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db)
+):
+    return get_current_admin_user(credentials, db)
 
 import uuid
 
