@@ -1,6 +1,5 @@
 
 import os
-from decouple import config as decouple_config
 
 class Settings:
     def __init__(self):
@@ -8,12 +7,12 @@ class Settings:
         self.DATABASE_URL = self._get_database_url()
 
         # JWT Configuration
-        self.SECRET_KEY: str = decouple_config('SECRET_KEY', default='your-secret-key-here-change-in-production')
+        self.SECRET_KEY: str = os.getenv('SECRET_KEY', 'your-secret-key-here-change-in-production')
         self.ALGORITHM: str = "HS256"
         self.ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
         # File upload
-        self.UPLOAD_DIR = decouple_config('UPLOAD_DIR', default='uploads')
+        self.UPLOAD_DIR = os.getenv('UPLOAD_DIR', 'uploads')
         self.MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
         self.ALLOWED_EXTENSIONS = {'.pdf', '.jpg', '.jpeg', '.png', '.gif'}
         
@@ -36,7 +35,7 @@ class Settings:
         ]
 
         for source in url_sources:
-            url = decouple_config(source, default=None)
+            url = os.getenv(source)
             if url and url.strip():
                 print(f"✅ Found database URL from {source}")
                 return url
