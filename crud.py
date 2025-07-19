@@ -25,7 +25,7 @@ def create_item(db: Session, model, item_data: dict):
         print(f"📡 Database connection verified: {result.fetchone()}")
         
         # Test if we can write to database
-        db.execute(text("SELECT version()"))
+        db.execute(text("SELECT 1 as test"))
         print(f"📡 Database write access verified")
         
         db_item = model(**item_data)

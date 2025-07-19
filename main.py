@@ -103,8 +103,8 @@ async def health_check():
 async def test_database(db: Session = Depends(get_db)):
     """Test database connection and write operations"""
     try:
-        # Test read
-        result = db.execute(text("SELECT version()")).fetchone()
+        # Test read - use database-agnostic query
+        result = db.execute(text("SELECT 1 as connection_test")).fetchone()
         
         # Test write (create a temporary record)
         from models import Book
