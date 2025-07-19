@@ -10,12 +10,17 @@ logger = logging.getLogger(__name__)
 
 logger.info(f"Connecting to database: {settings.DATABASE_URL[:50]}...")
 
-engine = create_engine(
-    settings.DATABASE_URL,
-    pool_pre_ping=True,
-    pool_recycle=300,
-    echo=False  # Set to True for SQL debugging
-)
+try:
+    engine = create_engine(
+        settings.DATABASE_URL,
+        pool_pre_ping=True,
+        pool_recycle=300,
+        echo=False  # Set to True for SQL debugging
+    )
+    logger.info("✅ Database engine created successfully")
+except Exception as e:
+    logger.error(f"❌ Failed to create database engine: {e}")
+    raise e
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

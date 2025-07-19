@@ -1,19 +1,40 @@
-from fastapi import FastAPI, Depends, HTTPException, status, File, UploadFile, Query
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy.orm import Session
-from typing import List, Optional
-import uvicorn
-import os
+import sys
+import traceback
 
-from database import engine, get_db
-from models import Base
-from api import (
-    auth as auth_api, users, books, diseases, drugs, dictionary, questions, 
-    notifications, staff, normal_ranges, 
-    app_links, about, instruments, notes, urine_slides, stool_slides, other_slides
-)
-from auth import verify_token
+try:
+    from fastapi import FastAPI, Depends, HTTPException, status, File, UploadFile, Query
+    from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+    from fastapi.middleware.cors import CORSMiddleware
+    from sqlalchemy.orm import Session
+    from typing import List, Optional
+    import uvicorn
+    import os
+    
+    print("✅ Basic imports successful")
+    
+    from database import engine, get_db
+    print("✅ Database import successful")
+    
+    from models import Base
+    print("✅ Models import successful")
+except Exception as e:
+    print(f"❌ Import error: {e}")
+    traceback.print_exc()
+    sys.exit(1)
+try:
+    from api import (
+        auth as auth_api, users, books, diseases, drugs, dictionary, questions, 
+        notifications, staff, normal_ranges, 
+        app_links, about, instruments, notes, urine_slides, stool_slides, other_slides
+    )
+    print("✅ API imports successful")
+    
+    from auth import verify_token
+    print("✅ Auth import successful")
+except Exception as e:
+    print(f"❌ API/Auth import error: {e}")
+    traceback.print_exc()
+    sys.exit(1)
 
 # Create database tables
 Base.metadata.create_all(bind=engine)

@@ -682,7 +682,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "alembic", specifier = ">=1.16.3" },
-    { name = "bcrypt", specifier = ">=4.3.0" },
+    { name = "bcrypt", specifier = ">=4.0.1" },
     { name = "decouple", specifier = ">=0.0.7" },
     { name = "email-validator", specifier = ">=2.2.0" },
     { name = "fastapi", specifier = ">=0.116.0" },
