@@ -7,3 +7,15 @@ packages = ["cargo", "libiconv", "libxcrypt", "rustc"]
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[workflows]
+runButton = "FastAPI Server"
+
+[[workflows.workflow]]
+name = "FastAPI Server"
+author = 45240170
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "uvicorn main:app --host 0.0.0.0 --port 5000 --reload"

@@ -5,7 +5,7 @@ import jwt
 from datetime import datetime, timedelta
 from passlib.context import CryptContext
 import models
-from config import get_db
+from database import get_db
 
 # Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
