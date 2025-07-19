@@ -1,6 +1,9 @@
 
 import os
-from decouple import config
+from decouple import Config, RepositoryEnv
+
+# Initialize config with .env file
+config = Config(RepositoryEnv('.env'))
 
 class Settings:
     def __init__(self):
