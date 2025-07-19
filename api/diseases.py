@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depe\nfrom fastapi.security import HTTPAuthorizationCredentialsnds, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 from typing import List, Optional
 import models
