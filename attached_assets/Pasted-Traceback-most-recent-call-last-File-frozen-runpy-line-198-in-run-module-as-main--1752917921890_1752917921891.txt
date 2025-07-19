@@ -1,0 +1,107 @@
+Traceback (most recent call last):
+
+  File "<frozen runpy>", line 198, in _run_module_as_main
+
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "<frozen runpy>", line 88, in _run_code
+
+  File "/opt/venv/lib/python3.12/site-packages/uvicorn/__main__.py", line 4, in <module>
+
+    uvicorn.main()
+
+  File "/opt/venv/lib/python3.12/site-packages/click/core.py", line 1442, in __call__
+
+    return self.main(*args, **kwargs)
+
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+    from api import (
+
+  File "/opt/venv/lib/python3.12/site-packages/click/core.py", line 1363, in main
+
+  File "/app/api/auth.py", line 9, in <module>
+
+    rv = self.invoke(ctx)
+
+    from auth import authenticate_user, create_access_token, get_current_user
+
+         ^^^^^^^^^^^^^^^^
+
+  File "/root/.nix-profile/lib/python3.12/importlib/__init__.py", line 90, in import_module
+
+ImportError: cannot import name 'authenticate_user' from 'auth' (/app/auth.py)
+
+    return _bootstrap._gcd_import(name[level:], package, level)
+
+  File "/opt/venv/lib/python3.12/site-packages/click/core.py", line 1226, in invoke
+
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+    return ctx.invoke(self.callback, **ctx.params)
+
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+^^^^^
+
+^
+
+  File "/opt/venv/lib/python3.12/site-packages/click/core.py", line 794, in invoke
+
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+
+    return callback(*args, **kwargs)
+
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+
+  File "/app/main.py", line 11, in <module>
+
+  File "/opt/venv/lib/python3.12/site-packages/uvicorn/main.py", line 413, in main
+
+    run(
+
+  File "/opt/venv/lib/python3.12/site-packages/uvicorn/main.py", line 580, in run
+
+    server.run()
+
+  File "/opt/venv/lib/python3.12/site-packages/uvicorn/server.py", line 67, in run
+
+    return asyncio.run(self.serve(sockets=sockets))
+
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/root/.nix-profile/lib/python3.12/asyncio/runners.py", line 194, in run
+
+    return runner.run(main)
+
+           ^^^^^^^^^^^^^^^^
+
+  File "/root/.nix-profile/lib/python3.12/asyncio/runners.py", line 118, in run
+
+    return self._loop.run_until_complete(task)
+
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/root/.nix-profile/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+
+    return future.result()
+
+           ^^^^^^^^^^^^^^^
+
+  File "/opt/venv/lib/python3.12/site-packages/uvicorn/server.py", line 71, in serve
+
+    await self._serve(sockets)
+
+  File "/opt/venv/lib/python3.12/site-packages/uvicorn/server.py", line 78, in _serve
+
+    config.load()
