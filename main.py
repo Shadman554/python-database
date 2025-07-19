@@ -2,6 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException, status, File, UploadFile, Q
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 from typing import List, Optional
 import uvicorn
 import os
@@ -103,7 +104,7 @@ async def test_database(db: Session = Depends(get_db)):
     """Test database connection and write operations"""
     try:
         # Test read
-        result = db.execute("SELECT version()").fetchone()
+        result = db.execute(text("SELECT version()")).fetchone()
         
         # Test write (create a temporary record)
         from models import Book
