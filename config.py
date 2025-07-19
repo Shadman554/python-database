@@ -1,6 +1,6 @@
 
 import os
-from python_decouple import config
+from decouple import config
 
 class Settings:
     def __init__(self):
