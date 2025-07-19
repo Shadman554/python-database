@@ -12,7 +12,7 @@ router = APIRouter()
 
 @router.get("/me", response_model=schemas.User)
 async def get_current_user_info(
-    current_user: models.User = Depends(lambda: get_current_user(security, get_db()))
+    current_user: models.User = Depends(get_current_user)
 ):
     """Get current user information"""
     return current_user
@@ -22,7 +22,7 @@ async def get_users(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=100),
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_current_admin_user)
 ):
     """Get all users (admin only)"""
     try:
@@ -36,7 +36,7 @@ async def get_users(
 async def get_user(
     username: str,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_current_admin_user)
 ):
     """Get a specific user by username (admin only)"""
     user = db.query(models.User).filter(models.User.username == username).first()
@@ -49,7 +49,7 @@ async def update_user(
     username: str,
     user_update: schemas.UserBase,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_current_admin_user)
 ):
     """Update a user (admin only)"""
     db_user = db.query(models.User).filter(models.User.username == username).first()
@@ -66,7 +66,7 @@ async def update_user(
 async def delete_user(
     username: str,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_current_admin_user)
 ):
     """Delete a user (admin only)"""
     db_user = db.query(models.User).filter(models.User.username == username).first()
@@ -84,7 +84,7 @@ async def add_user_points(
     username: str,
     points: int,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_current_admin_user)
 ):
     """Add points to a user (admin only)"""
     try:
@@ -121,7 +121,7 @@ async def get_leaderboard(
 @router.post("/reset-daily-points")
 async def reset_daily_points(
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_current_admin_user)
 ):
     """Reset daily points for all users (admin only)"""
     try:

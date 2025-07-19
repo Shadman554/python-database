@@ -61,7 +61,7 @@ async def update_staff(
     staff_name: str,
     staff: schemas.StaffCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_current_admin_user)
 ):
     """Update a staff member (admin only)"""
     db_staff = db.query(models.Staff).filter(models.Staff.name == staff_name).first()
@@ -78,7 +78,7 @@ async def update_staff(
 async def delete_staff(
     staff_name: str,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_admin_user(security, db))
+    current_user: models.User = Depends(get_current_admin_user)
 ):
     """Delete a staff member (admin only)"""
     db_staff = db.query(models.Staff).filter(models.Staff.name == staff_name).first()
