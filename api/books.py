@@ -30,7 +30,7 @@ async def get_books(
         else:
             books = crud.get_items(db, models.Book, skip, limit)
             total = crud.count_items(db, models.Book)
-        
+
         return create_paginated_response(books, total, skip // limit + 1, limit)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve books: {str(e)}")
@@ -77,7 +77,7 @@ async def update_book(
     db_book = db.query(models.Book).filter(models.Book.title == book_title).first()
     if not db_book:
         raise HTTPException(status_code=404, detail="Book not found")
-    
+
     try:
         updated_book = crud.update_item(db, db_book, book.dict())
         return updated_book
@@ -94,7 +94,7 @@ async def delete_book(
     db_book = db.query(models.Book).filter(models.Book.title == book_title).first()
     if not db_book:
         raise HTTPException(status_code=404, detail="Book not found")
-    
+
     try:
         crud.delete_item(db, db_book)
         return {"message": "Book deleted successfully"}
@@ -112,7 +112,7 @@ async def upload_book_cover(
     db_book = db.query(models.Book).filter(models.Book.title == book_title).first()
     if not db_book:
         raise HTTPException(status_code=404, detail="Book not found")
-    
+
     try:
         file_url = await save_file(file, "covers")
         db_book.cover_url = file_url
