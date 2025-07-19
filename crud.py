@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import and_, or_
+from sqlalchemy import and_, or_, text
 from typing import List, Optional
 import models
 import schemas
@@ -21,11 +21,11 @@ def create_item(db: Session, model, item_data: dict):
         print(f"🔧 Creating {model.__name__} with data: {item_data}")
         
         # Test database connection first
-        result = db.execute("SELECT 1")
+        result = db.execute(text("SELECT 1"))
         print(f"📡 Database connection verified: {result.fetchone()}")
         
         # Test if we can write to database
-        db.execute("SELECT version()")
+        db.execute(text("SELECT version()"))
         print(f"📡 Database write access verified")
         
         db_item = model(**item_data)
