@@ -28,5 +28,7 @@ class Settings:
 
     # Google OAuth
     GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID', '')
+    GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET', '')
+    GOOGLE_PROJECT_ID = os.getenv('GOOGLE_PROJECT_ID', '')
 
 settings = Settings()
