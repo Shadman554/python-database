@@ -9,6 +9,7 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str
+    google_id: Optional[str] = None
 
 class UserLogin(BaseModel):
     username: str
@@ -22,7 +23,8 @@ class User(UserBase):
     today_points: int
     created_at: datetime
     last_updated: datetime
-    
+    google_id: Optional[str] = None
+
     class Config:
         from_attributes = True
 
@@ -40,7 +42,7 @@ class BookCreate(BookBase):
 class Book(BookBase):
     id: str
     added_at: datetime
-    
+
     class Config:
         from_attributes = True
 
@@ -58,7 +60,7 @@ class DiseaseCreate(DiseaseBase):
 class Disease(DiseaseBase):
     id: str
     created_at: datetime
-    
+
     class Config:
         from_attributes = True
 
@@ -76,7 +78,7 @@ class DrugCreate(DrugBase):
 class Drug(DrugBase):
     id: str
     created_at: datetime
-    
+
     class Config:
         from_attributes = True
 
@@ -95,7 +97,7 @@ class DictionaryWordCreate(DictionaryWordBase):
 
 class DictionaryWord(DictionaryWordBase):
     id: str
-    
+
     class Config:
         from_attributes = True
 
@@ -114,7 +116,7 @@ class Question(QuestionBase):
     user_id: str
     likes: int
     timestamp: datetime
-    
+
     class Config:
         from_attributes = True
 
@@ -130,7 +132,7 @@ class NotificationCreate(NotificationBase):
 class Notification(NotificationBase):
     id: str
     timestamp: datetime
-    
+
     class Config:
         from_attributes = True
 
@@ -150,7 +152,7 @@ class StaffCreate(StaffBase):
 
 class Staff(StaffBase):
     id: str
-    
+
     class Config:
         from_attributes = True
 
@@ -166,7 +168,7 @@ class InstrumentCreate(InstrumentBase):
 class Instrument(InstrumentBase):
     id: str
     created_at: datetime
-    
+
     class Config:
         from_attributes = True
 
@@ -182,7 +184,7 @@ class NoteCreate(NoteBase):
 class Note(NoteBase):
     id: str
     created_at: datetime
-    
+
     class Config:
         from_attributes = True
 
@@ -198,7 +200,7 @@ class UrineSlideCreate(UrineSlideBase):
 class UrineSlide(UrineSlideBase):
     id: str
     created_at: datetime
-    
+
     class Config:
         from_attributes = True
 
@@ -214,7 +216,7 @@ class StoolSlideCreate(StoolSlideBase):
 class StoolSlide(StoolSlideBase):
     id: str
     created_at: datetime
-    
+
     class Config:
         from_attributes = True
 
@@ -230,7 +232,7 @@ class OtherSlideCreate(OtherSlideBase):
 class OtherSlide(OtherSlideBase):
     id: str
     created_at: datetime
-    
+
     class Config:
         from_attributes = True
 
@@ -248,7 +250,7 @@ class NormalRangeCreate(NormalRangeBase):
 
 class NormalRange(NormalRangeBase):
     id: str
-    
+
     class Config:
         from_attributes = True
 
@@ -261,7 +263,7 @@ class AppLinkCreate(AppLinkBase):
 
 class AppLink(AppLinkBase):
     id: str
-    
+
     class Config:
         from_attributes = True
 
@@ -275,7 +277,7 @@ class AboutCreate(AboutBase):
 class About(AboutBase):
     id: str
     exported_at: datetime
-    
+
     class Config:
         from_attributes = True
 

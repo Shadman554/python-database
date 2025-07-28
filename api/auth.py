@@ -25,11 +25,11 @@ async def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
         db_user = crud.get_user_by_username(db, user.username)
         if db_user:
             raise HTTPException(status_code=400, detail="Username already registered")
-        
+
         db_user = crud.get_user_by_email(db, user.email)
         if db_user:
             raise HTTPException(status_code=400, detail="Email already registered")
-        
+
         # Create new user
         db_user = crud.create_user(db, user)
         return db_user
@@ -49,19 +49,19 @@ async def login(user_credentials: schemas.UserLogin, db: Session = Depends(get_d
                 detail="Incorrect username or password",
                 headers={"WWW-Authenticate": "Bearer"},
             )
-        
+
         if not user.is_active:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Inactive user",
                 headers={"WWW-Authenticate": "Bearer"},
             )
-        
+
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
             data={"sub": user.username}, expires_delta=access_token_expires
         )
-        
+
         return {"access_token": access_token, "token_type": "bearer"}
     except HTTPException:
         raise
@@ -88,12 +88,12 @@ async def refresh_token(
     """Refresh access token"""
     try:
         current_user = get_current_user(credentials, db)
-        
+
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
             data={"sub": current_user.username}, expires_delta=access_token_expires
         )
-        
+
         return {"access_token": access_token, "token_type": "bearer"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to refresh token: {str(e)}")
@@ -104,59 +104,59 @@ async def google_login(request: Request, db: Session = Depends(get_db)):
     try:
         body = await request.json()
         google_token = body.get("token")
-        
+
         if not google_token:
             raise HTTPException(status_code=400, detail="Google token is required")
-        
+
         # Verify the Google token
         try:
             idinfo = google.oauth2.id_token.verify_oauth2_token(
                 google_token, 
                 google.auth.transport.requests.Request()
             )
-            
+
             # Extract user information from Google token
             google_user_id = idinfo['sub']
             email = idinfo['email']
             name = idinfo.get('name', '')
             given_name = idinfo.get('given_name', '')
             family_name = idinfo.get('family_name', '')
-            
+
         except ValueError as e:
             raise HTTPException(status_code=401, detail="Invalid Google token")
-        
+
         # Check if user exists
         db_user = crud.get_user_by_email(db, email)
-        
+
         if not db_user:
             # Create new user with Google authentication
             username = email.split('@')[0] + '_' + str(uuid.uuid4())[:8]
-            
+
             # Create a random password hash since Google users don't use passwords
             random_password = hashlib.sha256(str(uuid.uuid4()).encode()).hexdigest()
-            
+
             user_data = schemas.UserCreate(
                 username=username,
                 email=email,
                 password=random_password
             )
-            
+
             db_user = crud.create_user(db, user_data)
-        
+
         if not db_user.is_active:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Inactive user"
             )
-        
+
         # Create access token
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
             data={"sub": db_user.username}, expires_delta=access_token_expires
         )
-        
+
         return {"access_token": access_token, "token_type": "bearer"}
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -168,52 +168,52 @@ async def google_register(request: Request, db: Session = Depends(get_db)):
     try:
         body = await request.json()
         google_token = body.get("token")
-        
+
         if not google_token:
             raise HTTPException(status_code=400, detail="Google token is required")
-        
+
         # Verify the Google token
         try:
             idinfo = google.oauth2.id_token.verify_oauth2_token(
                 google_token, 
                 google.auth.transport.requests.Request()
             )
-            
+
             # Extract user information from Google token
             google_user_id = idinfo['sub']
             email = idinfo['email']
             name = idinfo.get('name', '')
-            
+
         except ValueError as e:
             raise HTTPException(status_code=401, detail="Invalid Google token")
-        
+
         # Check if user already exists
         db_user = crud.get_user_by_email(db, email)
         if db_user:
             raise HTTPException(status_code=400, detail="User already registered")
-        
+
         # Create username from email and add random suffix to ensure uniqueness
         base_username = email.split('@')[0]
         username = base_username
         counter = 1
-        
+
         # Ensure username uniqueness
         while crud.get_user_by_username(db, username):
             username = f"{base_username}_{counter}"
             counter += 1
-        
+
         # Create a random password hash since Google users don't use passwords
         random_password = hashlib.sha256(str(uuid.uuid4()).encode()).hexdigest()
-        
+
         user_data = schemas.UserCreate(
             username=username,
             email=email,
             password=random_password
         )
-        
+
         db_user = crud.create_user(db, user_data)
         return db_user
-        
+
     except HTTPException:
         raise
     except Exception as e:

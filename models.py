@@ -6,7 +6,7 @@ from database import Base
 
 class User(Base):
     __tablename__ = "users"
-    
+
     id = Column(String, primary_key=True, index=True)
     username = Column(String(255), unique=True, index=True)
     email = Column(String(255), unique=True, index=True)
@@ -20,7 +20,7 @@ class User(Base):
 
 class Book(Base):
     __tablename__ = "books"
-    
+
     id = Column(String, primary_key=True, index=True)
     title = Column(String(500), index=True)
     description = Column(Text)
@@ -31,7 +31,7 @@ class Book(Base):
 
 class Disease(Base):
     __tablename__ = "diseases"
-    
+
     id = Column(String, primary_key=True, index=True)
     name = Column(String(500), index=True)
     kurdish = Column(String(500), index=True)
@@ -42,7 +42,7 @@ class Disease(Base):
 
 class Drug(Base):
     __tablename__ = "drugs"
-    
+
     id = Column(String, primary_key=True, index=True)
     name = Column(String(500), index=True)
     usage = Column(Text)
@@ -53,7 +53,7 @@ class Drug(Base):
 
 class DictionaryWord(Base):
     __tablename__ = "dictionary_words"
-    
+
     id = Column(String, primary_key=True, index=True)
     name = Column(String(500), index=True)
     kurdish = Column(String(500), index=True)
@@ -65,7 +65,7 @@ class DictionaryWord(Base):
 
 class Question(Base):
     __tablename__ = "questions"
-    
+
     id = Column(String, primary_key=True, index=True)
     text = Column(Text)
     user_id = Column(String, ForeignKey("users.id"))
@@ -74,12 +74,12 @@ class Question(Base):
     user_photo = Column(String(1000))
     likes = Column(Integer, default=0)
     timestamp = Column(DateTime, default=datetime.utcnow)
-    
+
     user = relationship("User", backref="questions")
 
 class Notification(Base):
     __tablename__ = "notifications"
-    
+
     id = Column(String, primary_key=True, index=True)
     title = Column(String(500))
     body = Column(Text)
@@ -88,7 +88,7 @@ class Notification(Base):
 
 class Staff(Base):
     __tablename__ = "staff"
-    
+
     id = Column(String, primary_key=True, index=True)
     name = Column(String(255))
     job = Column(String(255))
@@ -101,7 +101,7 @@ class Staff(Base):
 
 class Instrument(Base):
     __tablename__ = "instruments"
-    
+
     id = Column(String, primary_key=True, index=True)
     name = Column(String(500), index=True)
     description = Column(Text)
@@ -110,7 +110,7 @@ class Instrument(Base):
 
 class Note(Base):
     __tablename__ = "notes"
-    
+
     id = Column(String, primary_key=True, index=True)
     name = Column(String(500), index=True)
     description = Column(Text)
@@ -119,7 +119,7 @@ class Note(Base):
 
 class UrineSlide(Base):
     __tablename__ = "urine_slides"
-    
+
     id = Column(String, primary_key=True, index=True)
     name = Column(String(500), index=True)
     species = Column(String(255), index=True)
@@ -128,7 +128,7 @@ class UrineSlide(Base):
 
 class StoolSlide(Base):
     __tablename__ = "stool_slides"
-    
+
     id = Column(String, primary_key=True, index=True)
     name = Column(String(500), index=True)
     species = Column(String(255), index=True)
@@ -137,7 +137,7 @@ class StoolSlide(Base):
 
 class OtherSlide(Base):
     __tablename__ = "other_slides"
-    
+
     id = Column(String, primary_key=True, index=True)
     name = Column(String(500), index=True)
     species = Column(String(255), index=True)
@@ -146,7 +146,7 @@ class OtherSlide(Base):
 
 class NormalRange(Base):
     __tablename__ = "normal_ranges"
-    
+
     id = Column(String, primary_key=True, index=True)
     name = Column(String(500), index=True)
     species = Column(String(255), index=True)
@@ -157,13 +157,13 @@ class NormalRange(Base):
 
 class AppLink(Base):
     __tablename__ = "app_links"
-    
+
     id = Column(String, primary_key=True, index=True)
     url = Column(String(1000))
 
 class About(Base):
     __tablename__ = "about"
-    
+
     id = Column(String, primary_key=True, index=True)
     text = Column(Text)
     exported_at = Column(DateTime, default=datetime.utcnow)
