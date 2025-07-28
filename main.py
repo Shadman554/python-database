@@ -46,8 +46,12 @@ app = FastAPI(
     - **About**: About page content
 
     ## Authentication
-    Most endpoints require authentication. Use `/api/auth/login` to get a JWT token,
-    then include it in the Authorization header as `Bearer <token>`.
+    Multiple authentication methods are supported:
+    - **Standard Login**: Use `/api/auth/login` with username/password
+    - **Google OAuth**: Use `/api/auth/google-login` with a Google OAuth token
+    - **Registration**: Use `/api/auth/register` or `/api/auth/google-register`
+    
+    After authentication, include the JWT token in the Authorization header as `Bearer <token>`.
     """,
     version="2.0.0",
     docs_url="/docs",

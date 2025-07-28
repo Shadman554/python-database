@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from datetime import timedelta
 import models
@@ -8,6 +9,10 @@ import crud
 from database import get_db
 from auth import authenticate_user, create_access_token, get_current_user
 from config import settings
+import google.auth.transport.requests
+import google.oauth2.id_token
+import uuid
+import hashlib
 
 router = APIRouter()
 security = HTTPBearer()
@@ -92,6 +97,127 @@ async def refresh_token(
         return {"access_token": access_token, "token_type": "bearer"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to refresh token: {str(e)}")
+
+@router.post("/google-login", response_model=schemas.Token)
+async def google_login(request: Request, db: Session = Depends(get_db)):
+    """Authenticate user with Google OAuth token"""
+    try:
+        body = await request.json()
+        google_token = body.get("token")
+        
+        if not google_token:
+            raise HTTPException(status_code=400, detail="Google token is required")
+        
+        # Verify the Google token
+        try:
+            idinfo = google.oauth2.id_token.verify_oauth2_token(
+                google_token, 
+                google.auth.transport.requests.Request()
+            )
+            
+            # Extract user information from Google token
+            google_user_id = idinfo['sub']
+            email = idinfo['email']
+            name = idinfo.get('name', '')
+            given_name = idinfo.get('given_name', '')
+            family_name = idinfo.get('family_name', '')
+            
+        except ValueError as e:
+            raise HTTPException(status_code=401, detail="Invalid Google token")
+        
+        # Check if user exists
+        db_user = crud.get_user_by_email(db, email)
+        
+        if not db_user:
+            # Create new user with Google authentication
+            username = email.split('@')[0] + '_' + str(uuid.uuid4())[:8]
+            
+            # Create a random password hash since Google users don't use passwords
+            random_password = hashlib.sha256(str(uuid.uuid4()).encode()).hexdigest()
+            
+            user_data = schemas.UserCreate(
+                username=username,
+                email=email,
+                password=random_password
+            )
+            
+            db_user = crud.create_user(db, user_data)
+        
+        if not db_user.is_active:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Inactive user"
+            )
+        
+        # Create access token
+        access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token = create_access_token(
+            data={"sub": db_user.username}, expires_delta=access_token_expires
+        )
+        
+        return {"access_token": access_token, "token_type": "bearer"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to authenticate with Google: {str(e)}")
+
+@router.post("/google-register", response_model=schemas.User)
+async def google_register(request: Request, db: Session = Depends(get_db)):
+    """Register a new user with Google OAuth"""
+    try:
+        body = await request.json()
+        google_token = body.get("token")
+        
+        if not google_token:
+            raise HTTPException(status_code=400, detail="Google token is required")
+        
+        # Verify the Google token
+        try:
+            idinfo = google.oauth2.id_token.verify_oauth2_token(
+                google_token, 
+                google.auth.transport.requests.Request()
+            )
+            
+            # Extract user information from Google token
+            google_user_id = idinfo['sub']
+            email = idinfo['email']
+            name = idinfo.get('name', '')
+            
+        except ValueError as e:
+            raise HTTPException(status_code=401, detail="Invalid Google token")
+        
+        # Check if user already exists
+        db_user = crud.get_user_by_email(db, email)
+        if db_user:
+            raise HTTPException(status_code=400, detail="User already registered")
+        
+        # Create username from email and add random suffix to ensure uniqueness
+        base_username = email.split('@')[0]
+        username = base_username
+        counter = 1
+        
+        # Ensure username uniqueness
+        while crud.get_user_by_username(db, username):
+            username = f"{base_username}_{counter}"
+            counter += 1
+        
+        # Create a random password hash since Google users don't use passwords
+        random_password = hashlib.sha256(str(uuid.uuid4()).encode()).hexdigest()
+        
+        user_data = schemas.UserCreate(
+            username=username,
+            email=email,
+            password=random_password
+        )
+        
+        db_user = crud.create_user(db, user_data)
+        return db_user
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to register with Google: {str(e)}")
 
 @router.post("/logout")
 async def logout(
