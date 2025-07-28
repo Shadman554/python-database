@@ -15,6 +15,7 @@ class User(Base):
     is_admin = Column(Boolean, default=False)
     total_points = Column(Integer, default=0)
     today_points = Column(Integer, default=0)
+    photo_url = Column(String(1000), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     last_updated = Column(DateTime, default=datetime.utcnow)
 

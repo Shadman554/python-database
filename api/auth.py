@@ -121,6 +121,7 @@ async def google_login(request: Request, db: Session = Depends(get_db)):
             name = idinfo.get('name', '')
             given_name = idinfo.get('given_name', '')
             family_name = idinfo.get('family_name', '')
+            photo_url = idinfo.get('picture', '')
 
         except ValueError as e:
             raise HTTPException(status_code=401, detail="Invalid Google token")
@@ -138,10 +139,17 @@ async def google_login(request: Request, db: Session = Depends(get_db)):
             user_data = schemas.UserCreate(
                 username=username,
                 email=email,
-                password=random_password
+                password=random_password,
+                photo_url=photo_url
             )
 
             db_user = crud.create_user(db, user_data)
+        else:
+            # Update photo_url if Google provides one and it's different
+            if photo_url and db_user.photo_url != photo_url:
+                db_user.photo_url = photo_url
+                db.commit()
+                db.refresh(db_user)
 
         if not db_user.is_active:
             raise HTTPException(
@@ -183,6 +191,7 @@ async def google_register(request: Request, db: Session = Depends(get_db)):
             google_user_id = idinfo['sub']
             email = idinfo['email']
             name = idinfo.get('name', '')
+            photo_url = idinfo.get('picture', '')
 
         except ValueError as e:
             raise HTTPException(status_code=401, detail="Invalid Google token")
@@ -208,7 +217,8 @@ async def google_register(request: Request, db: Session = Depends(get_db)):
         user_data = schemas.UserCreate(
             username=username,
             email=email,
-            password=random_password
+            password=random_password,
+            photo_url=photo_url
         )
 
         db_user = crud.create_user(db, user_data)

@@ -41,13 +41,14 @@ def get_user_by_email(db: Session, email: str):
     return db.query(models.User).filter(models.User.email == email).first()
 
 def create_user(db: Session, user: schemas.UserCreate):
-    from auth import get_password_hash
+    user_id = str(uuid.uuid4())
     hashed_password = get_password_hash(user.password)
     db_user = models.User(
-        id=str(uuid.uuid4()),
+        id=user_id,
         username=user.username,
         email=user.email,
-        hashed_password=hashed_password
+        hashed_password=hashed_password,
+        photo_url=user.photo_url
     )
     db.add(db_user)
     db.commit()

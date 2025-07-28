@@ -10,6 +10,7 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     password: str
     google_id: Optional[str] = None
+    photo_url: Optional[str] = None
 
 class UserLogin(BaseModel):
     username: str
@@ -21,6 +22,7 @@ class User(UserBase):
     is_admin: bool
     total_points: int
     today_points: int
+    photo_url: Optional[str] = None
     created_at: datetime
     last_updated: datetime
     google_id: Optional[str] = None
