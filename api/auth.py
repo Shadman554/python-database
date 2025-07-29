@@ -7,7 +7,7 @@ import models
 import schemas
 import crud
 from database import get_db
-from auth import authenticate_user, create_access_token, get_current_user
+from auth import authenticate_user, create_access_token, get_current_user, get_password_hash
 from config import settings
 import google.auth.transport.requests
 import google.oauth2.id_token
