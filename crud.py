@@ -5,6 +5,7 @@ import models
 import schemas
 from datetime import datetime
 import uuid
+from auth import verify_password, get_password_hash
 
 # Generic CRUD operations
 def get_item(db: Session, model, item_id: str):

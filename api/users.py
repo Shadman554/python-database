@@ -6,7 +6,7 @@ import models
 import schemas
 import crud
 from database import get_db
-from auth import get_current_user, get_current_admin_user, security
+from auth import get_current_user, get_password_hash, get_current_admin_user, security
 from utils import create_paginated_response
 # Dependency function for admin authentication
 def get_admin_user(
