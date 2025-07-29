@@ -1,0 +1,22 @@
+Restarted application in 2,725ms.
+I/flutter (22145): HomePage initState called - fetching data...
+I/flutter (22145): Starting to fetch data...
+I/flutter (22145): Raw data loaded:
+I/flutter (22145): - Drugs: 46
+I/flutter (22145): - Diseases: 48
+I/flutter (22145): - Terms: 2439
+I/flutter (22145): Total items loaded for search: 2533
+V/AutofillManager(22145): requestHideFillUi(null): anchor = null
+D/ViewRootImplExtImpl(22145): the up motion event handled by client, just return
+I/flutter (22145): Making request to https://python-database-production.up.railway.app/api/auth/me
+I/flutter (22145): User info response status: 200
+I/flutter (22145): User info response body: {"username":"shadman","email":"shadmanosman59@gmail.com","id":"bb56205a-2c6c-48a2-b56e-f6b9eaa4cabb","is_active":true,"is_admin":false,"total_points":0,"today_points":0,"photo_url":"https://lh3.googleusercontent.com/a/ACg8ocLDKUCCD-KR6Q9Ea7rHmufoktXc6urqp_clxjaFu6Du0EYQDjCC","created_at":"2025-07-29T14:28:31.742871","last_updated":"2025-07-29T14:28:31.742881","google_id":null}
+I/flutter (22145): User data from API (merged): {username: shadman, email: shadmanosman59@gmail.com, id: bb56205a-2c6c-48a2-b56e-f6b9eaa4cabb, is_active: true, is_admin: false, total_points: 0, today_points: 0, photo_url: https://lh3.googleusercontent.com/a/ACg8ocLDKUCCD-KR6Q9Ea7rHmufoktXc6urqp_clxjaFu6Du0EYQDjCC, created_at: 2025-07-29T14:28:31.742871, last_updated: 2025-07-29T14:28:31.742881, google_id: null}
+V/AutofillManager(22145): requestHideFillUi(null): anchor = null
+D/ViewRootImplExtImpl(22145): the up motion event handled by client, just return
+V/AutofillManager(22145): requestHideFillUi(null): anchor = null
+I/flutter (22145): Attempting to delete account for user: shadmanosman59@gmail.com
+D/ViewRootImplExtImpl(22145): the up motion event handled by client, just return
+I/flutter (22145): Delete account response status: 404
+I/flutter (22145): Delete account response body: {"detail":"Not Found"}
+W/WindowOnBackDispatcher(22145): sendCancelIfRunning: isInProgress=false callback=io.flutter.embedding.android.FlutterActivity$1@a7475df
