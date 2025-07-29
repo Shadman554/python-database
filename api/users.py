@@ -18,10 +18,28 @@ router = APIRouter()
 
 @router.get("/me", response_model=schemas.User)
 async def get_current_user_info(
-    current_user: models.User = Depends(lambda: get_current_user(security, get_db()))
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db)
 ):
     """Get current user information"""
+    current_user = get_current_user(credentials, db)
     return current_user
+
+@router.delete("/me")
+async def delete_my_account(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db)
+):
+    """Delete current user's own account"""
+    try:
+        current_user = get_current_user(credentials, db)
+        
+        # Delete the user's account
+        crud.delete_item(db, current_user)
+        
+        return {"message": "Account deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to delete account: {str(e)}")
 
 @router.get("/", response_model=schemas.PaginatedResponse)
 async def get_users(
