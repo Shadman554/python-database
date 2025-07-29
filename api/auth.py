@@ -229,6 +229,22 @@ async def google_register(request: Request, db: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to register with Google: {str(e)}")
 
+@router.delete("/delete-account")
+async def delete_account(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db)
+):
+    """Delete current user's account"""
+    try:
+        current_user = get_current_user(credentials, db)
+        
+        # Delete the user's account
+        crud.delete_item(db, current_user)
+        
+        return {"message": "Account deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to delete account: {str(e)}")
+
 @router.post("/logout")
 async def logout(
     credentials: HTTPAuthorizationCredentials = Depends(security),
