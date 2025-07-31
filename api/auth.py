@@ -258,3 +258,55 @@ async def logout(
         return {"message": "Successfully logged out"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to logout: {str(e)}")
+
+@router.post("/update_points")
+async def update_points(
+    request: Request,
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db)
+):
+    """Update user points"""
+    try:
+        current_user = get_current_user(credentials, db)
+        body = await request.json()
+        points = body.get("points", 0)
+        
+        if not isinstance(points, int):
+            raise HTTPException(status_code=400, detail="Points must be an integer")
+        
+        updated_user = crud.update_user_points(db, current_user.id, points)
+        return {
+            "message": f"Updated points by {points}",
+            "total_points": updated_user.total_points,
+            "today_points": updated_user.today_points
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update points: {str(e)}")
+
+@router.post("/add-points")
+async def add_points(
+    request: Request,
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db)
+):
+    """Add points to user"""
+    try:
+        current_user = get_current_user(credentials, db)
+        body = await request.json()
+        points = body.get("points", 0)
+        
+        if not isinstance(points, int) or points < 0:
+            raise HTTPException(status_code=400, detail="Points must be a positive integer")
+        
+        updated_user = crud.update_user_points(db, current_user.id, points)
+        return {
+            "message": f"Added {points} points",
+            "total_points": updated_user.total_points,
+            "today_points": updated_user.today_points
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to add points: {str(e)}")
