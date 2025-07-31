@@ -19,7 +19,8 @@ async def get_leaderboard(
                 {
                     "rank": i + 1,
                     "username": user.username,
-                    "total_points": user.total_points
+                    "total_points": user.total_points,
+                    "photo_url": user.photo_url
                 }
                 for i, user in enumerate(users)
             ]
