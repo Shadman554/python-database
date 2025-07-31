@@ -11,7 +11,7 @@ from models import Base
 from api import (
     auth as auth_api, users, books, diseases, drugs, dictionary, questions, 
     notifications, staff, normal_ranges, 
-    app_links, about, instruments, notes, urine_slides, stool_slides, other_slides
+    app_links, about, instruments, notes, urine_slides, stool_slides, other_slides, leaderboard
 )
 from auth import verify_token
 
@@ -50,7 +50,7 @@ app = FastAPI(
     - **Standard Login**: Use `/api/auth/login` with username/password
     - **Google OAuth**: Use `/api/auth/google-login` with a Google OAuth token
     - **Registration**: Use `/api/auth/register` or `/api/auth/google-register`
-    
+
     After authentication, include the JWT token in the Authorization header as `Bearer <token>`.
     """,
     version="2.0.0",
@@ -88,6 +88,8 @@ app.include_router(notes.router, prefix="/api/notes", tags=["notes"])
 app.include_router(urine_slides.router, prefix="/api/urine-slides", tags=["urine-slides"])
 app.include_router(stool_slides.router, prefix="/api/stool-slides", tags=["stool-slides"])
 app.include_router(other_slides.router, prefix="/api/other-slides", tags=["other-slides"])
+app.include_router(about.router, prefix="/api/about", tags=["about"])
+app.include_router(leaderboard.router, prefix="/api/leaderboard", tags=["leaderboard"])
 
 @app.get("/")
 async def root():
