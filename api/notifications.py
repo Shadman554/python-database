@@ -9,12 +9,60 @@ from database import get_db
 from auth import get_current_admin_user, security
 from utils import create_paginated_response
 import uuid
+import requests
+import os
 # Dependency function for admin authentication
 def get_admin_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
     db: Session = Depends(get_db)
 ):
     return get_current_admin_user(credentials, db)
+
+async def send_onesignal_notification(title: str, content: str, custom_data: dict = None):
+    """Send push notification via OneSignal"""
+    try:
+        # Get OneSignal credentials from environment variables
+        onesignal_app_id = os.getenv("ONESIGNAL_APP_ID")
+        onesignal_rest_api_key = os.getenv("ONESIGNAL_REST_API_KEY")
+        
+        if not onesignal_app_id or not onesignal_rest_api_key:
+            print("OneSignal credentials not configured")
+            return False
+        
+        # OneSignal API endpoint
+        url = "https://onesignal.com/api/v1/notifications"
+        
+        # Headers
+        headers = {
+            "Authorization": f"Basic {onesignal_rest_api_key}",
+            "Content-Type": "application/json"
+        }
+        
+        # Notification payload
+        payload = {
+            "app_id": onesignal_app_id,
+            "included_segments": ["All"],  # Send to all users
+            "headings": {"en": title},
+            "contents": {"en": content}
+        }
+        
+        # Add custom data if provided
+        if custom_data:
+            payload["data"] = custom_data
+        
+        # Send the notification
+        response = requests.post(url, json=payload, headers=headers)
+        
+        if response.status_code == 200:
+            print(f"OneSignal notification sent successfully: {response.json()}")
+            return True
+        else:
+            print(f"Failed to send OneSignal notification: {response.status_code} - {response.text}")
+            return False
+            
+    except Exception as e:
+        print(f"Error sending OneSignal notification: {str(e)}")
+        return False
 router = APIRouter()
 
 @router.get("/", response_model=schemas.PaginatedResponse)
@@ -45,11 +93,23 @@ async def create_notification(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_admin_user)
 ):
-    """Create a new notification (admin only)"""
+    """Create a new notification and send push notification (admin only)"""
     try:
         notification_data = notification.dict()
         notification_data['id'] = str(uuid.uuid4())
         db_notification = crud.create_item(db, models.Notification, notification_data)
+        
+        # Send push notification via OneSignal
+        custom_data = {
+            "notification_id": db_notification.id,
+            "type": "notification"
+        }
+        await send_onesignal_notification(
+            title=db_notification.title,
+            content=db_notification.content,
+            custom_data=custom_data
+        )
+        
         return db_notification
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create notification: {str(e)}")
