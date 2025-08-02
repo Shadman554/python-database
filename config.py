@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv(dotenv_path='.env')
 
 class Settings:
-    # Database
+    # Database - will use Replit PostgreSQL when available
     DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///./production.db')
 
     # JWT
