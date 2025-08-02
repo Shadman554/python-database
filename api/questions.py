@@ -64,6 +64,10 @@ async def create_question(
         # Award points for asking a question
         crud.update_user_points(db, current_user.id, 5)
         
+        # Send notification for new question
+        from utils import send_content_notification
+        await send_content_notification("question", question_data.get('question', 'New Question'), question_data['id'])
+        
         return db_question
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create question: {str(e)}")

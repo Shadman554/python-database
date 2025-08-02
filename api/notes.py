@@ -51,6 +51,11 @@ async def create_note(
         note_data = note.dict()
         note_data['id'] = str(uuid.uuid4())
         db_note = crud.create_item(db, models.Note, note_data)
+        
+        # Send notification for new note
+        from utils import send_content_notification
+        await send_content_notification("note", note_data.get('name', 'Unknown'), note_data['id'])
+        
         return db_note
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create note: {str(e)}")

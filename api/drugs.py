@@ -68,6 +68,11 @@ async def create_drug(
         drug_data = drug.dict()
         drug_data['id'] = str(uuid.uuid4())
         db_drug = crud.create_item(db, models.Drug, drug_data)
+        
+        # Send notification for new drug
+        from utils import send_content_notification
+        await send_content_notification("drug", drug_data.get('name', 'Unknown'), drug_data['id'])
+        
         return db_drug
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create drug: {str(e)}")

@@ -50,6 +50,11 @@ async def create_instrument(
         instrument_data = instrument.dict()
         instrument_data['id'] = str(uuid.uuid4())
         db_instrument = crud.create_item(db, models.Instrument, instrument_data)
+        
+        # Send notification for new instrument
+        from utils import send_content_notification
+        await send_content_notification("instrument", instrument_data.get('name', 'Unknown'), instrument_data['id'])
+        
         return db_instrument
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create instrument: {str(e)}")

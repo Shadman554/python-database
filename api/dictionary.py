@@ -78,6 +78,11 @@ async def create_dictionary_word(
         word_data = word.dict()
         word_data['id'] = str(uuid.uuid4())
         db_word = crud.create_item(db, models.DictionaryWord, word_data)
+        
+        # Send notification for new dictionary word
+        from utils import send_content_notification
+        await send_content_notification("word", word_data.get('name', 'Unknown'), word_data['id'])
+        
         return db_word
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create dictionary word: {str(e)}")

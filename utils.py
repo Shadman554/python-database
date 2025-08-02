@@ -103,7 +103,11 @@ async def send_content_notification(content_type: str, title: str, item_id: str)
         "book": "کتێبی نوێ",
         "disease": "نەخۆشی نوێ", 
         "drug": "دەرمانی نوێ",
-        "question": "پرسیاری نوێ"
+        "question": "پرسیاری نوێ",
+        "word": "وشەی نوێ",
+        "instrument": "ئامێری نوێ",
+        "note": "تێبینی نوێ",
+        "slide": "سلایدی نوێ"
     }
     
     notification_title = notification_titles.get(content_type, "ناوەڕۆکی نوێ")
