@@ -134,6 +134,7 @@ class NotificationCreate(NotificationBase):
 
 class Notification(NotificationBase):
     id: str
+    is_read: bool = False
     timestamp: datetime
 
     class Config:

@@ -86,6 +86,7 @@ class Notification(Base):
     body = Column(Text)
     image_url = Column(String(1000))
     type = Column(String(255))
+    is_read = Column(Boolean, default=False)
     timestamp = Column(DateTime, default=datetime.utcnow)
 
 class Staff(Base):
