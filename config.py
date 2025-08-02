@@ -6,10 +6,10 @@ load_dotenv(dotenv_path='.env')
 
 class Settings:
     # Database
-    DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///./local_dev.db')
+    DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///./production.db')
 
     # JWT
-    SECRET_KEY = os.getenv('SECRET_KEY', 'your-secret-key-here')
+    SECRET_KEY = os.getenv('SECRET_KEY', 'production-secret-key-change-this-in-production-2024')
     ALGORITHM = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
