@@ -94,3 +94,25 @@ def calculate_similarity(str1: str, str2: str) -> float:
         return 0.0
 
     return len(common_chars) / len(total_chars)
+
+async def send_content_notification(content_type: str, title: str, item_id: str):
+    """Send notification for new content"""
+    from api.notifications import send_onesignal_notification
+    
+    notification_titles = {
+        "book": "کتێبی نوێ",
+        "disease": "نەخۆشی نوێ", 
+        "drug": "دەرمانی نوێ",
+        "question": "پرسیاری نوێ"
+    }
+    
+    notification_title = notification_titles.get(content_type, "ناوەڕۆکی نوێ")
+    
+    await send_onesignal_notification(
+        title=notification_title,
+        content=f"{notification_title} زیادکراوە: {title}",
+        custom_data={
+            f"{content_type}_id": item_id,
+            "type": f"new_{content_type}"
+        }
+    )

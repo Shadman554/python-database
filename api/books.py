@@ -70,6 +70,18 @@ async def create_book(
         book_data = book.dict()
         book_data['id'] = str(uuid.uuid4())
         db_book = crud.create_item(db, models.Book, book_data)
+        
+        # Send push notification for new book
+        from api.notifications import send_onesignal_notification
+        await send_onesignal_notification(
+            title="کتێبی نوێ",
+            content=f"کتێبی نوێ زیادکراوە: {db_book.title}",
+            custom_data={
+                "book_id": db_book.id,
+                "type": "new_book"
+            }
+        )
+        
         return db_book
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create book: {str(e)}")

@@ -64,6 +64,18 @@ async def create_disease(
         disease_data = disease.dict()
         disease_data['id'] = str(uuid.uuid4())
         db_disease = crud.create_item(db, models.Disease, disease_data)
+        
+        # Send push notification for new disease
+        from api.notifications import send_onesignal_notification
+        await send_onesignal_notification(
+            title="نەخۆشی نوێ",
+            content=f"نەخۆشی نوێ زیادکراوە: {db_disease.name}",
+            custom_data={
+                "disease_id": db_disease.id,
+                "type": "new_disease"
+            }
+        )
+        
         return db_disease
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create disease: {str(e)}")
