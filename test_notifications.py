@@ -19,7 +19,7 @@ def test_notification_creation():
         # Test direct notification creation
         notification_data = {
             "title": "تاقیکردنەوە",
-            "content": "ئەمە تاقیکردنەوەیەکە بۆ OneSignal",
+            "body": "ئەمە تاقیکردنەوەیەکە بۆ OneSignal",
             "type": "test"
         }
         

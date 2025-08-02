@@ -160,3 +160,26 @@ async def get_recent_notifications(
         return {"notifications": notifications}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve recent notifications: {str(e)}")
+
+@router.get("/system/health")
+async def notification_system_health():
+    """Check notification system health"""
+    try:
+        # Check OneSignal configuration
+        onesignal_app_id = os.getenv("ONESIGNAL_APP_ID")
+        onesignal_rest_api_key = os.getenv("ONESIGNAL_REST_API_KEY")
+        
+        onesignal_configured = bool(onesignal_app_id and onesignal_rest_api_key)
+        
+        return {
+            "status": "healthy" if onesignal_configured else "warning",
+            "onesignal_configured": onesignal_configured,
+            "app_id_present": bool(onesignal_app_id),
+            "api_key_present": bool(onesignal_rest_api_key),
+            "message": "OneSignal fully configured" if onesignal_configured else "OneSignal credentials missing"
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": f"Health check failed: {str(e)}"
+        }
