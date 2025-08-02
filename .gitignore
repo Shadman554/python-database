@@ -20,6 +20,11 @@ wheels/
 .installed.cfg
 *.egg
 
+# Environment variables
+.env
+.env.local
+.env.*.local
+
 # Virtual Environment
 venv/
 env/
@@ -30,11 +35,6 @@ ENV/
 .vscode/
 *.swp
 *.swo
-
-# Environment variables
-.env
-.env.local
-.env.*.local
 
 # Database
 *.sqlite3
