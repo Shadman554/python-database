@@ -127,6 +127,7 @@ class NotificationBase(BaseModel):
     title: str
     body: str
     image_url: Optional[str] = None
+    type: Optional[str] = None
 
 class NotificationCreate(NotificationBase):
     pass

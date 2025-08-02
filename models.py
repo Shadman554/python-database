@@ -85,6 +85,7 @@ class Notification(Base):
     title = Column(String(500))
     body = Column(Text)
     image_url = Column(String(1000))
+    type = Column(String(255))
     timestamp = Column(DateTime, default=datetime.utcnow)
 
 class Staff(Base):
