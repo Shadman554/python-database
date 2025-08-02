@@ -106,7 +106,7 @@ async def create_notification(
         }
         await send_onesignal_notification(
             title=db_notification.title,
-            content=db_notification.content,
+            content=db_notification.body,
             custom_data=custom_data
         )
         
