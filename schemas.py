@@ -285,6 +285,53 @@ class About(AboutBase):
     class Config:
         from_attributes = True
 
+# Test category schemas
+class TestBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+    image_url: Optional[str] = None
+
+class TestCreate(TestBase):
+    pass
+
+class Test(TestBase):
+    id: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+# Specific test category schemas
+class HaematologyTestCreate(TestCreate):
+    pass
+
+class HaematologyTest(Test):
+    pass
+
+class SerologyTestCreate(TestCreate):
+    pass
+
+class SerologyTest(Test):
+    pass
+
+class BiochemistryTestCreate(TestCreate):
+    pass
+
+class BiochemistryTest(Test):
+    pass
+
+class BacteriologyTestCreate(TestCreate):
+    pass
+
+class BacteriologyTest(Test):
+    pass
+
+class OtherTestCreate(TestCreate):
+    pass
+
+class OtherTestModel(Test):
+    pass
+
 # Common response schemas
 class PaginatedResponse(BaseModel):
     items: List[dict]

@@ -170,3 +170,48 @@ class About(Base):
     id = Column(String, primary_key=True, index=True)
     text = Column(Text)
     exported_at = Column(DateTime, default=datetime.utcnow)
+
+class HaematologyTest(Base):
+    __tablename__ = "haematology_tests"
+
+    id = Column(String, primary_key=True, index=True)
+    name = Column(String(500), index=True, unique=True)
+    description = Column(Text)
+    image_url = Column(String(1000))
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+class SerologyTest(Base):
+    __tablename__ = "serology_tests"
+
+    id = Column(String, primary_key=True, index=True)
+    name = Column(String(500), index=True, unique=True)
+    description = Column(Text)
+    image_url = Column(String(1000))
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+class BiochemistryTest(Base):
+    __tablename__ = "biochemistry_tests"
+
+    id = Column(String, primary_key=True, index=True)
+    name = Column(String(500), index=True, unique=True)
+    description = Column(Text)
+    image_url = Column(String(1000))
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+class BacteriologyTest(Base):
+    __tablename__ = "bacteriology_tests"
+
+    id = Column(String, primary_key=True, index=True)
+    name = Column(String(500), index=True, unique=True)
+    description = Column(Text)
+    image_url = Column(String(1000))
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+class OtherTest(Base):
+    __tablename__ = "other_tests"
+
+    id = Column(String, primary_key=True, index=True)
+    name = Column(String(500), index=True, unique=True)
+    description = Column(Text)
+    image_url = Column(String(1000))
+    created_at = Column(DateTime, default=datetime.utcnow)

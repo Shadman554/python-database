@@ -11,7 +11,8 @@ from models import Base
 from api import (
     auth as auth_api, users, books, diseases, drugs, dictionary, 
     notifications, normal_ranges, 
-    app_links, about, instruments, notes, urine_slides, stool_slides, other_slides, leaderboard
+    app_links, about, instruments, notes, urine_slides, stool_slides, other_slides, leaderboard,
+    haematology_tests, serology_tests, biochemistry_tests, bacteriology_tests, other_tests
 )
 from auth import verify_token
 
@@ -55,6 +56,11 @@ app.include_router(stool_slides.router, prefix="/api/stool-slides", tags=["stool
 app.include_router(other_slides.router, prefix="/api/other-slides", tags=["other-slides"])
 app.include_router(about.router, prefix="/api/about", tags=["about"])
 app.include_router(leaderboard.router, prefix="/api/leaderboard", tags=["leaderboard"])
+app.include_router(haematology_tests.router, prefix="/api/haematology-tests", tags=["haematology-tests"])
+app.include_router(serology_tests.router, prefix="/api/serology-tests", tags=["serology-tests"])
+app.include_router(biochemistry_tests.router, prefix="/api/biochemistry-tests", tags=["biochemistry-tests"])
+app.include_router(bacteriology_tests.router, prefix="/api/bacteriology-tests", tags=["bacteriology-tests"])
+app.include_router(other_tests.router, prefix="/api/other-tests", tags=["other-tests"])
 
 @app.get("/")
 async def root():
