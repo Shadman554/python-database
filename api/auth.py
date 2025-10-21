@@ -13,7 +13,6 @@ from config import settings
 import google.auth.transport.requests
 import google.oauth2.id_token
 import uuid
-import hashlib
 
 router = APIRouter()
 security = HTTPBearer()
@@ -190,9 +189,16 @@ async def google_login(request: Request, db: Session = Depends(get_db)):
 
         # Verify the Google token
         try:
+            if not settings.GOOGLE_CLIENT_ID:
+                raise HTTPException(
+                    status_code=500, 
+                    detail="Google OAuth is not configured on the server. Please contact the administrator."
+                )
+            
             idinfo = google.oauth2.id_token.verify_oauth2_token(
                 google_token, 
-                google.auth.transport.requests.Request()
+                google.auth.transport.requests.Request(),
+                settings.GOOGLE_CLIENT_ID
             )
 
             # Extract user information from Google token
@@ -204,7 +210,7 @@ async def google_login(request: Request, db: Session = Depends(get_db)):
             photo_url = idinfo.get('picture', '')
 
         except ValueError as e:
-            raise HTTPException(status_code=401, detail="Invalid Google token")
+            raise HTTPException(status_code=401, detail=f"Invalid Google token: {str(e)}")
 
         # Check if user exists
         db_user = crud.get_user_by_email(db, email)
@@ -213,8 +219,9 @@ async def google_login(request: Request, db: Session = Depends(get_db)):
             # Create new user with Google authentication
             username = email.split('@')[0] + '_' + str(uuid.uuid4())[:8]
 
-            # Create a random password hash since Google users don't use passwords
-            random_password = hashlib.sha256(str(uuid.uuid4()).encode()).hexdigest()
+            # Create a random password (bcrypt has 72 byte limit, so keep it short)
+            # Google users don't use this password directly
+            random_password = str(uuid.uuid4())[:32]
 
             user_data = schemas.UserCreate(
                 username=username,
@@ -262,9 +269,16 @@ async def google_register(request: Request, db: Session = Depends(get_db)):
 
         # Verify the Google token
         try:
+            if not settings.GOOGLE_CLIENT_ID:
+                raise HTTPException(
+                    status_code=500, 
+                    detail="Google OAuth is not configured on the server. Please contact the administrator."
+                )
+            
             idinfo = google.oauth2.id_token.verify_oauth2_token(
                 google_token, 
-                google.auth.transport.requests.Request()
+                google.auth.transport.requests.Request(),
+                settings.GOOGLE_CLIENT_ID
             )
 
             # Extract user information from Google token
@@ -274,7 +288,7 @@ async def google_register(request: Request, db: Session = Depends(get_db)):
             photo_url = idinfo.get('picture', '')
 
         except ValueError as e:
-            raise HTTPException(status_code=401, detail="Invalid Google token")
+            raise HTTPException(status_code=401, detail=f"Invalid Google token: {str(e)}")
 
         # Check if user already exists
         db_user = crud.get_user_by_email(db, email)
@@ -291,8 +305,9 @@ async def google_register(request: Request, db: Session = Depends(get_db)):
             username = f"{base_username}_{counter}"
             counter += 1
 
-        # Create a random password hash since Google users don't use passwords
-        random_password = hashlib.sha256(str(uuid.uuid4()).encode()).hexdigest()
+        # Create a random password (bcrypt has 72 byte limit, so keep it short)
+        # Google users don't use this password directly
+        random_password = str(uuid.uuid4())[:32]
 
         user_data = schemas.UserCreate(
             username=username,

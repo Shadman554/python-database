@@ -72,3 +72,68 @@
 2025-10-21 16:33:09 - vetstan_api.database - INFO - Database connection successful
 2025-10-21 16:33:09 - vetstan_api - INFO - ✅ Database connection established
 2025-10-21 16:33:09 - vetstan_api - INFO - ✅ Database tables created/verified
+2025-10-21 16:53:06 - vetstan_api - INFO - 🛑 Shutting down Veterinary Educational Platform API...
+2025-10-21 16:53:06 - vetstan_api - INFO - ✅ Database connections closed
+2025-10-21 16:53:07 - vetstan_api.database - INFO - Using PostgreSQL database with connection pooling
+2025-10-21 16:53:08 - vetstan_api - WARNING - ⚠️  CORS is configured to allow all origins (*)
+2025-10-21 16:53:08 - vetstan_api - WARNING - ⚠️  CORS is configured to allow all origins (*)
+2025-10-21 16:53:08 - vetstan_api - INFO - 🚀 Starting Veterinary Educational Platform API...
+2025-10-21 16:53:08 - vetstan_api - INFO - Environment: development
+2025-10-21 16:53:08 - vetstan_api.database - INFO - Database connection successful
+2025-10-21 16:53:08 - vetstan_api - INFO - ✅ Database connection established
+2025-10-21 16:53:08 - vetstan_api - INFO - ✅ Database tables created/verified
+2025-10-21 16:53:28 - vetstan_api - INFO - 🛑 Shutting down Veterinary Educational Platform API...
+2025-10-21 16:53:28 - vetstan_api - INFO - ✅ Database connections closed
+2025-10-21 16:53:29 - vetstan_api.database - INFO - Using PostgreSQL database with connection pooling
+2025-10-21 16:53:30 - vetstan_api - WARNING - ⚠️  CORS is configured to allow all origins (*)
+2025-10-21 16:53:30 - vetstan_api - WARNING - ⚠️  CORS is configured to allow all origins (*)
+2025-10-21 16:53:30 - vetstan_api - INFO - 🚀 Starting Veterinary Educational Platform API...
+2025-10-21 16:53:30 - vetstan_api - INFO - Environment: development
+2025-10-21 16:53:30 - vetstan_api.database - INFO - Database connection successful
+2025-10-21 16:53:30 - vetstan_api - INFO - ✅ Database connection established
+2025-10-21 16:53:30 - vetstan_api - INFO - ✅ Database tables created/verified
+2025-10-21 16:53:39 - vetstan_api - INFO - 🛑 Shutting down Veterinary Educational Platform API...
+2025-10-21 16:53:39 - vetstan_api - INFO - ✅ Database connections closed
+2025-10-21 16:53:40 - vetstan_api.database - INFO - Using PostgreSQL database with connection pooling
+2025-10-21 16:53:41 - vetstan_api - WARNING - ⚠️  CORS is configured to allow all origins (*)
+2025-10-21 16:53:41 - vetstan_api.database - INFO - Using PostgreSQL database with connection pooling
+2025-10-21 16:53:42 - vetstan_api - WARNING - ⚠️  CORS is configured to allow all origins (*)
+2025-10-21 16:53:42 - vetstan_api - WARNING - ⚠️  CORS is configured to allow all origins (*)
+2025-10-21 16:53:42 - vetstan_api - INFO - 🚀 Starting Veterinary Educational Platform API...
+2025-10-21 16:53:42 - vetstan_api - INFO - Environment: development
+2025-10-21 16:53:42 - vetstan_api.database - INFO - Database connection successful
+2025-10-21 16:53:42 - vetstan_api - INFO - ✅ Database connection established
+2025-10-21 16:53:42 - vetstan_api - INFO - ✅ Database tables created/verified
+2025-10-21 16:53:43 - vetstan_api.routes - INFO - GET / - 200 - 0.004s
+2025-10-21 16:53:43 - vetstan_api.routes - INFO - GET / - 200 - 0.001s
+2025-10-21 16:53:49 - vetstan_api.routes - INFO - GET /favicon.ico - 404 - 0.001s
+2025-10-21 16:54:51 - vetstan_api - INFO - 🛑 Shutting down Veterinary Educational Platform API...
+2025-10-21 16:54:51 - vetstan_api - INFO - ✅ Database connections closed
+2025-10-21 16:54:52 - vetstan_api.database - INFO - Using PostgreSQL database with connection pooling
+2025-10-21 16:54:53 - vetstan_api - WARNING - ⚠️  CORS is configured to allow all origins (*)
+2025-10-21 16:54:53 - vetstan_api - WARNING - ⚠️  CORS is configured to allow all origins (*)
+2025-10-21 16:54:53 - vetstan_api - INFO - 🚀 Starting Veterinary Educational Platform API...
+2025-10-21 16:54:53 - vetstan_api - INFO - Environment: development
+2025-10-21 16:54:53 - vetstan_api.database - INFO - Database connection successful
+2025-10-21 16:54:53 - vetstan_api - INFO - ✅ Database connection established
+2025-10-21 16:54:53 - vetstan_api - INFO - ✅ Database tables created/verified
+2025-10-21 16:54:54 - vetstan_api - INFO - 🛑 Shutting down Veterinary Educational Platform API...
+2025-10-21 16:54:54 - vetstan_api - INFO - ✅ Database connections closed
+2025-10-21 16:54:55 - vetstan_api.database - INFO - Using PostgreSQL database with connection pooling
+2025-10-21 16:54:56 - vetstan_api - WARNING - ⚠️  CORS is configured to allow all origins (*)
+2025-10-21 16:54:56 - vetstan_api - WARNING - ⚠️  CORS is configured to allow all origins (*)
+2025-10-21 16:54:56 - vetstan_api - INFO - 🚀 Starting Veterinary Educational Platform API...
+2025-10-21 16:54:56 - vetstan_api - INFO - Environment: development
+2025-10-21 16:54:56 - vetstan_api.database - INFO - Database connection successful
+2025-10-21 16:54:56 - vetstan_api - INFO - ✅ Database connection established
+2025-10-21 16:54:56 - vetstan_api - INFO - ✅ Database tables created/verified
+2025-10-21 16:55:21 - vetstan_api - INFO - 🛑 Shutting down Veterinary Educational Platform API...
+2025-10-21 16:55:21 - vetstan_api - INFO - ✅ Database connections closed
+2025-10-21 16:55:22 - vetstan_api.database - INFO - Using PostgreSQL database with connection pooling
+2025-10-21 16:55:22 - vetstan_api - WARNING - ⚠️  CORS is configured to allow all origins (*)
+2025-10-21 16:55:23 - vetstan_api - WARNING - ⚠️  CORS is configured to allow all origins (*)
+2025-10-21 16:55:23 - vetstan_api - INFO - 🚀 Starting Veterinary Educational Platform API...
+2025-10-21 16:55:23 - vetstan_api - INFO - Environment: development
+2025-10-21 16:55:23 - vetstan_api.database - INFO - Database connection successful
+2025-10-21 16:55:23 - vetstan_api - INFO - ✅ Database connection established
+2025-10-21 16:55:23 - vetstan_api - INFO - ✅ Database tables created/verified
