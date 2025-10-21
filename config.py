@@ -14,11 +14,8 @@ class Settings:
         self.ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
         self.DEBUG = self.ENVIRONMENT == 'development'
         
-        # Database - Use Railway public URL when available, fallback to Replit or SQLite
-        self.DATABASE_URL = os.getenv(
-            'DATABASE_PUBLIC_URL',
-            os.getenv('REPLIT_DB_URL', os.getenv('DATABASE_URL', 'sqlite:///./production.db'))
-        )
+        # Database - Use DATABASE_URL if available, fallback to SQLite
+        self.DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///./production.db')
         
         # JWT - Validate SECRET_KEY in production
         self.SECRET_KEY = os.getenv('SECRET_KEY')

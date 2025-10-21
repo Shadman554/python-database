@@ -1,0 +1,13 @@
+2025-10-21 16:20:44 - vetstan_api.database - INFO - Using database: https
+2025-10-21 16:21:44 - vetstan_api.database - INFO - Using PostgreSQL database with connection pooling
+2025-10-21 16:21:45 - vetstan_api.database - INFO - Using PostgreSQL database with connection pooling
+2025-10-21 16:21:50 - vetstan_api.database - WARNING - Database connection attempt 1/3 failed: Not an executable object: 'SELECT 1'
+2025-10-21 16:21:52 - vetstan_api.database - WARNING - Database connection attempt 2/3 failed: Not an executable object: 'SELECT 1'
+2025-10-21 16:21:54 - vetstan_api.database - WARNING - Database connection attempt 3/3 failed: Not an executable object: 'SELECT 1'
+2025-10-21 16:21:54 - vetstan_api.database - ERROR - Failed to connect to database after all retries
+2025-10-21 16:22:41 - vetstan_api.database - INFO - Using PostgreSQL database with connection pooling
+2025-10-21 16:22:42 - vetstan_api.database - INFO - Database connection successful
+2025-10-21 16:22:56 - vetstan_api.database - INFO - Using PostgreSQL database with connection pooling
+2025-10-21 16:22:56 - vetstan_api.database - INFO - Database connection successful
+2025-10-21 16:23:42 - vetstan_api.database - INFO - Using PostgreSQL database with connection pooling
+2025-10-21 16:23:42 - vetstan_api.database - INFO - Database connection successful

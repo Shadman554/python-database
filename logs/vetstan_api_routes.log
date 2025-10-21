@@ -1,0 +1,8 @@
+2025-10-21 16:21:55 - vetstan_api.routes - INFO - GET / - 200 - 0.004s
+2025-10-21 16:21:56 - vetstan_api.routes - INFO - GET / - 200 - 0.002s
+2025-10-21 16:22:04 - vetstan_api.routes - INFO - GET /favicon.ico - 404 - 0.002s
+2025-10-21 16:23:03 - vetstan_api.routes - INFO - GET / - 200 - 0.002s
+2025-10-21 16:23:14 - vetstan_api.routes - INFO - GET /docs - 200 - 0.001s
+2025-10-21 16:23:49 - vetstan_api.routes - INFO - GET /docs - 200 - 0.002s
+2025-10-21 16:23:50 - vetstan_api.routes - INFO - GET /openapi.json - 200 - 0.129s
+2025-10-21 16:24:31 - vetstan_api.routes - INFO - GET /health - 200 - 0.010s

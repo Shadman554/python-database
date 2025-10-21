@@ -1,5 +1,5 @@
 import os
-from sqlalchemy import create_engine, event, exc
+from sqlalchemy import create_engine, event, exc, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import Pool
@@ -87,7 +87,7 @@ def check_db_connection(max_retries: int = 3, retry_delay: int = 2) -> bool:
         try:
             # Try to connect and execute a simple query
             with engine.connect() as conn:
-                conn.execute("SELECT 1")
+                conn.execute(text("SELECT 1"))
             db_logger.info("Database connection successful")
             return True
         except Exception as e:
