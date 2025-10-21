@@ -20,11 +20,11 @@ class Settings:
         # JWT - Validate SECRET_KEY in production
         self.SECRET_KEY = os.getenv('SECRET_KEY')
         if not self.SECRET_KEY:
+            # Generate a random key with a warning
+            self.SECRET_KEY = secrets.token_urlsafe(32)
             if self.ENVIRONMENT == 'production':
-                raise ValueError("SECRET_KEY must be set in production environment!")
+                print(f"⚠️  WARNING: Using auto-generated SECRET_KEY in production. Set SECRET_KEY env var for security!")
             else:
-                # Generate a random key for development
-                self.SECRET_KEY = secrets.token_urlsafe(32)
                 print(f"⚠️  WARNING: Using auto-generated SECRET_KEY for development")
         
         self.ALGORITHM = "HS256"

@@ -157,9 +157,11 @@ async def metrics(db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail="Failed to retrieve metrics")
 
 if __name__ == "__main__":
+    import os
+    port = int(os.getenv("PORT", 5000))
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
-        port=5000,
-        reload=True
+        port=port,
+        reload=settings.DEBUG
     )

@@ -11,3 +11,7 @@
 2025-10-21 16:22:56 - vetstan_api.database - INFO - Database connection successful
 2025-10-21 16:23:42 - vetstan_api.database - INFO - Using PostgreSQL database with connection pooling
 2025-10-21 16:23:42 - vetstan_api.database - INFO - Database connection successful
+2025-10-21 16:31:30 - vetstan_api.database - INFO - Using PostgreSQL database with connection pooling
+2025-10-21 16:31:30 - vetstan_api.database - INFO - Database connection successful
+2025-10-21 16:33:08 - vetstan_api.database - INFO - Using PostgreSQL database with connection pooling
+2025-10-21 16:33:09 - vetstan_api.database - INFO - Database connection successful
