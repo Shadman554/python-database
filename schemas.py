@@ -73,6 +73,11 @@ class DrugBase(BaseModel):
     side_effect: Optional[str] = None
     other_info: Optional[str] = None
     drug_class: Optional[str] = None
+    trade_names: Optional[str] = None
+    species_dosages: Optional[str] = None
+    contraindications: Optional[str] = None
+    drug_interactions: Optional[str] = None
+    withdrawal_times: Optional[str] = None
 
 class DrugCreate(DrugBase):
     pass

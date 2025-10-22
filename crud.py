@@ -92,7 +92,12 @@ def search_drugs(db: Session, query: str, skip: int = 0, limit: int = 100):
         or_(
             models.Drug.name.ilike(f"%{query}%"),
             models.Drug.usage.ilike(f"%{query}%"),
-            models.Drug.drug_class.ilike(f"%{query}%")
+            models.Drug.drug_class.ilike(f"%{query}%"),
+            models.Drug.trade_names.ilike(f"%{query}%"),
+            models.Drug.species_dosages.ilike(f"%{query}%"),
+            models.Drug.contraindications.ilike(f"%{query}%"),
+            models.Drug.drug_interactions.ilike(f"%{query}%"),
+            models.Drug.withdrawal_times.ilike(f"%{query}%")
         )
     ).offset(skip).limit(limit).all()
 
@@ -147,7 +152,12 @@ def count_search_results(db: Session, model, query: str):
             or_(
                 models.Drug.name.ilike(f"%{query}%"),
                 models.Drug.usage.ilike(f"%{query}%"),
-                models.Drug.drug_class.ilike(f"%{query}%")
+                models.Drug.drug_class.ilike(f"%{query}%"),
+                models.Drug.trade_names.ilike(f"%{query}%"),
+                models.Drug.species_dosages.ilike(f"%{query}%"),
+                models.Drug.contraindications.ilike(f"%{query}%"),
+                models.Drug.drug_interactions.ilike(f"%{query}%"),
+                models.Drug.withdrawal_times.ilike(f"%{query}%")
             )
         ).count()
     elif model == models.DictionaryWord:

@@ -51,6 +51,11 @@ class Drug(Base):
     side_effect = Column(Text)
     other_info = Column(Text)
     drug_class = Column(String(255), index=True)
+    trade_names = Column(Text)
+    species_dosages = Column(Text)
+    contraindications = Column(Text)
+    drug_interactions = Column(Text)
+    withdrawal_times = Column(Text)
     created_at = Column(DateTime, default=datetime.utcnow)
 
 class DictionaryWord(Base):
