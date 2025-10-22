@@ -243,17 +243,23 @@ class OtherSlide(OtherSlideBase):
 # Normal Range schemas
 class NormalRangeBase(BaseModel):
     name: str
+    parameter: Optional[str] = None
     species: str
     category: str
     unit: str
     min_value: str
     max_value: str
+    panic_low: Optional[str] = None
+    panic_high: Optional[str] = None
+    note: Optional[str] = None
+    reference: Optional[str] = None
 
 class NormalRangeCreate(NormalRangeBase):
     pass
 
 class NormalRange(NormalRangeBase):
     id: str
+    created_at: datetime
 
     class Config:
         from_attributes = True

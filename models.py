@@ -153,11 +153,17 @@ class NormalRange(Base):
 
     id = Column(String, primary_key=True, index=True)
     name = Column(String(500), index=True)
+    parameter = Column(String(500), index=True)
     species = Column(String(255), index=True)
     category = Column(String(255), index=True)
     unit = Column(String(50))
     min_value = Column(String(50))
     max_value = Column(String(50))
+    panic_low = Column(String(50))
+    panic_high = Column(String(50))
+    note = Column(Text)
+    reference = Column(Text)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
 class AppLink(Base):
     __tablename__ = "app_links"
