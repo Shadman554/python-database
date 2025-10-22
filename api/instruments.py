@@ -19,15 +19,28 @@ router = APIRouter()
 
 @router.get("/", response_model=schemas.PaginatedResponse)
 async def get_instruments(
-    skip: int = Query(0, ge=0),
+    search: Optional[str] = Query(None),
+    offset: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=100),
     db: Session = Depends(get_db)
 ):
-    """Get all instruments with pagination"""
+    """Get all instruments with optional search and pagination"""
     try:
-        instruments = db.query(models.Instrument).order_by(models.Instrument.created_at.desc()).offset(skip).limit(limit).all()
-        total = crud.count_items(db, models.Instrument)
-        return create_paginated_response(instruments, total, skip // limit + 1, limit)
+        query = db.query(models.Instrument)
+        
+        if search:
+            from sqlalchemy import or_
+            query = query.filter(
+                or_(
+                    models.Instrument.name.ilike(f"%{search}%"),
+                    models.Instrument.description.ilike(f"%{search}%")
+                )
+            )
+        
+        total = query.count()
+        instruments = query.order_by(models.Instrument.created_at.desc()).offset(offset).limit(limit).all()
+        
+        return create_paginated_response(instruments, total, offset // limit + 1, limit)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve instruments: {str(e)}")
 
