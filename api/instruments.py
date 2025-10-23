@@ -20,11 +20,12 @@ router = APIRouter()
 @router.get("/", response_model=schemas.PaginatedResponse)
 async def get_instruments(
     search: Optional[str] = Query(None),
+    category: Optional[str] = Query(None),
     offset: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=100),
     db: Session = Depends(get_db)
 ):
-    """Get all instruments with optional search and pagination"""
+    """Get all instruments with optional search, category filter, and pagination"""
     try:
         query = db.query(models.Instrument)
         
@@ -33,9 +34,13 @@ async def get_instruments(
             query = query.filter(
                 or_(
                     models.Instrument.name.ilike(f"%{search}%"),
+                    models.Instrument.category.ilike(f"%{search}%"),
                     models.Instrument.description.ilike(f"%{search}%")
                 )
             )
+        
+        if category:
+            query = query.filter(models.Instrument.category == category)
         
         total = query.count()
         instruments = query.order_by(models.Instrument.created_at.desc()).offset(offset).limit(limit).all()
