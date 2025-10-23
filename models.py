@@ -113,6 +113,7 @@ class Instrument(Base):
 
     id = Column(String, primary_key=True, index=True)
     name = Column(String(500), index=True)
+    category = Column(String(255), index=True)
     description = Column(Text)
     image_url = Column(String(1000))
     created_at = Column(DateTime, default=datetime.utcnow)

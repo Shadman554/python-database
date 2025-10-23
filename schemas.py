@@ -168,6 +168,7 @@ class Staff(StaffBase):
 # Instrument schemas
 class InstrumentBase(BaseModel):
     name: str
+    category: Optional[str] = None
     description: Optional[str] = None
     image_url: Optional[str] = None
 

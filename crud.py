@@ -111,6 +111,15 @@ def search_dictionary(db: Session, query: str, skip: int = 0, limit: int = 100):
         )
     ).offset(skip).limit(limit).all()
 
+def search_instruments(db: Session, query: str, skip: int = 0, limit: int = 100):
+    return db.query(models.Instrument).filter(
+        or_(
+            models.Instrument.name.ilike(f"%{query}%"),
+            models.Instrument.category.ilike(f"%{query}%"),
+            models.Instrument.description.ilike(f"%{query}%")
+        )
+    ).offset(skip).limit(limit).all()
+
 # Filter functions
 def filter_books_by_category(db: Session, category: str, skip: int = 0, limit: int = 100):
     return db.query(models.Book).filter(models.Book.category == category).offset(skip).limit(limit).all()
@@ -123,6 +132,9 @@ def filter_normal_ranges_by_species(db: Session, species: str, skip: int = 0, li
 
 def filter_normal_ranges_by_category(db: Session, category: str, skip: int = 0, limit: int = 100):
     return db.query(models.NormalRange).filter(models.NormalRange.category == category).offset(skip).limit(limit).all()
+
+def filter_instruments_by_category(db: Session, category: str, skip: int = 0, limit: int = 100):
+    return db.query(models.Instrument).filter(models.Instrument.category == category).offset(skip).limit(limit).all()
 
 # Count functions
 def count_items(db: Session, model):
@@ -167,6 +179,14 @@ def count_search_results(db: Session, model, query: str):
                 models.DictionaryWord.kurdish.ilike(f"%{query}%"),
                 models.DictionaryWord.arabic.ilike(f"%{query}%"),
                 models.DictionaryWord.description.ilike(f"%{query}%")
+            )
+        ).count()
+    elif model == models.Instrument:
+        return db.query(model).filter(
+            or_(
+                models.Instrument.name.ilike(f"%{query}%"),
+                models.Instrument.category.ilike(f"%{query}%"),
+                models.Instrument.description.ilike(f"%{query}%")
             )
         ).count()
     return 0
