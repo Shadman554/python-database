@@ -184,6 +184,34 @@ class About(Base):
     text = Column(Text)
     exported_at = Column(DateTime, default=datetime.utcnow)
 
+class CEO(Base):
+    __tablename__ = "ceos"
+
+    id = Column(String, primary_key=True, index=True)
+    name = Column(String(255), nullable=False)
+    role = Column(String(255), nullable=False)
+    description = Column(Text)
+    color = Column(String(7), nullable=False)  # Hex color like #2563EB
+    image_url = Column(String(1000))
+    facebook_url = Column(String(1000))
+    viber_url = Column(String(1000))
+    display_order = Column(Integer, default=0)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+class Supporter(Base):
+    __tablename__ = "supporters"
+
+    id = Column(String, primary_key=True, index=True)
+    name = Column(String(255), nullable=False)
+    title = Column(String(255), nullable=False)
+    color = Column(String(7), nullable=False)  # Hex color like #7C3AED
+    icon = Column(String(50), default='school')  # Icon name
+    image_url = Column(String(1000))
+    display_order = Column(Integer, default=0)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
 class HaematologyTest(Base):
     __tablename__ = "haematology_tests"
 

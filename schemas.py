@@ -297,6 +297,66 @@ class About(AboutBase):
     class Config:
         from_attributes = True
 
+# CEO schemas
+class CEOBase(BaseModel):
+    name: str
+    role: str
+    description: Optional[str] = None
+    color: str
+    image_url: Optional[str] = None
+    facebook_url: Optional[str] = None
+    viber_url: Optional[str] = None
+    display_order: int = 0
+
+class CEOCreate(CEOBase):
+    pass
+
+class CEOUpdate(BaseModel):
+    name: Optional[str] = None
+    role: Optional[str] = None
+    description: Optional[str] = None
+    color: Optional[str] = None
+    image_url: Optional[str] = None
+    facebook_url: Optional[str] = None
+    viber_url: Optional[str] = None
+    display_order: Optional[int] = None
+
+class CEO(CEOBase):
+    id: str
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
+# Supporter schemas
+class SupporterBase(BaseModel):
+    name: str
+    title: str
+    color: str
+    icon: str = "school"
+    image_url: Optional[str] = None
+    display_order: int = 0
+
+class SupporterCreate(SupporterBase):
+    pass
+
+class SupporterUpdate(BaseModel):
+    name: Optional[str] = None
+    title: Optional[str] = None
+    color: Optional[str] = None
+    icon: Optional[str] = None
+    image_url: Optional[str] = None
+    display_order: Optional[int] = None
+
+class Supporter(SupporterBase):
+    id: str
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
 # Test category schemas
 class TestBase(BaseModel):
     name: str

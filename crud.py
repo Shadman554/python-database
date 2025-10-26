@@ -136,6 +136,62 @@ def filter_normal_ranges_by_category(db: Session, category: str, skip: int = 0, 
 def filter_instruments_by_category(db: Session, category: str, skip: int = 0, limit: int = 100):
     return db.query(models.Instrument).filter(models.Instrument.category == category).offset(skip).limit(limit).all()
 
+# CEO CRUD operations
+def get_ceos(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.CEO).order_by(models.CEO.display_order).offset(skip).limit(limit).all()
+
+def get_ceo(db: Session, ceo_id: str):
+    return db.query(models.CEO).filter(models.CEO.id == ceo_id).first()
+
+def create_ceo(db: Session, ceo: schemas.CEOCreate):
+    ceo_id = str(uuid.uuid4())
+    db_ceo = models.CEO(id=ceo_id, **ceo.dict())
+    db.add(db_ceo)
+    db.commit()
+    db.refresh(db_ceo)
+    return db_ceo
+
+def update_ceo(db: Session, db_ceo: models.CEO, ceo_update: schemas.CEOUpdate):
+    update_data = ceo_update.dict(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(db_ceo, key, value)
+    db_ceo.updated_at = datetime.utcnow()
+    db.commit()
+    db.refresh(db_ceo)
+    return db_ceo
+
+def delete_ceo(db: Session, db_ceo: models.CEO):
+    db.delete(db_ceo)
+    db.commit()
+
+# Supporter CRUD operations
+def get_supporters(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Supporter).order_by(models.Supporter.display_order).offset(skip).limit(limit).all()
+
+def get_supporter(db: Session, supporter_id: str):
+    return db.query(models.Supporter).filter(models.Supporter.id == supporter_id).first()
+
+def create_supporter(db: Session, supporter: schemas.SupporterCreate):
+    supporter_id = str(uuid.uuid4())
+    db_supporter = models.Supporter(id=supporter_id, **supporter.dict())
+    db.add(db_supporter)
+    db.commit()
+    db.refresh(db_supporter)
+    return db_supporter
+
+def update_supporter(db: Session, db_supporter: models.Supporter, supporter_update: schemas.SupporterUpdate):
+    update_data = supporter_update.dict(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(db_supporter, key, value)
+    db_supporter.updated_at = datetime.utcnow()
+    db.commit()
+    db.refresh(db_supporter)
+    return db_supporter
+
+def delete_supporter(db: Session, db_supporter: models.Supporter):
+    db.delete(db_supporter)
+    db.commit()
+
 # Count functions
 def count_items(db: Session, model):
     return db.query(model).count()
