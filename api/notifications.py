@@ -9,8 +9,9 @@ from database import get_db
 from auth import get_current_admin_user, security
 from utils import create_paginated_response
 import uuid
-import requests
+import httpx
 import os
+from logger import app_logger
 # Dependency function for admin authentication
 def get_admin_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
@@ -26,7 +27,7 @@ async def send_onesignal_notification(title: str, content: str, custom_data: dic
         onesignal_rest_api_key = os.getenv("ONESIGNAL_REST_API_KEY")
         
         if not onesignal_app_id or not onesignal_rest_api_key:
-            print("OneSignal credentials not configured")
+            app_logger.warning("OneSignal credentials not configured")
             return False
         
         # OneSignal API endpoint
@@ -50,18 +51,18 @@ async def send_onesignal_notification(title: str, content: str, custom_data: dic
         if custom_data:
             payload["data"] = custom_data
         
-        # Send the notification
-        response = requests.post(url, json=payload, headers=headers)
+        # Send the notification using async httpx
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, json=payload, headers=headers, timeout=10)
         
         if response.status_code == 200:
-            print(f"OneSignal notification sent successfully: {response.json()}")
             return True
         else:
-            print(f"Failed to send OneSignal notification: {response.status_code} - {response.text}")
+            app_logger.warning(f"OneSignal notification failed: {response.status_code}")
             return False
             
     except Exception as e:
-        print(f"Error sending OneSignal notification: {str(e)}")
+        app_logger.error(f"Error sending OneSignal notification: {str(e)}")
         return False
 router = APIRouter()
 

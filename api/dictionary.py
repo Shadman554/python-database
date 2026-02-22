@@ -122,11 +122,18 @@ async def delete_dictionary_word(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to delete dictionary word: {str(e)}")
 
+def get_authenticated_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db)
+):
+    from auth import get_current_user
+    return get_current_user(credentials, db)
+
 @router.post("/{word_name}/favorite")
 async def toggle_favorite(
     word_name: str,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_user(security, db))
+    current_user: models.User = Depends(get_authenticated_user)
 ):
     """Toggle favorite status of a dictionary word"""
     word = db.query(models.DictionaryWord).filter(models.DictionaryWord.name == word_name).first()
@@ -149,7 +156,7 @@ async def toggle_favorite(
 async def toggle_save(
     word_name: str,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(lambda: get_current_user(security, db))
+    current_user: models.User = Depends(get_authenticated_user)
 ):
     """Toggle save status of a dictionary word"""
     word = db.query(models.DictionaryWord).filter(models.DictionaryWord.name == word_name).first()

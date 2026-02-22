@@ -1,7 +1,6 @@
 import os
 from sqlalchemy import create_engine, event, exc, text
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.pool import Pool
 from dotenv import load_dotenv
 from config import settings

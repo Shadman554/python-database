@@ -1,8 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
-from sqlalchemy import text
 from datetime import timedelta
 import models
 import schemas
@@ -84,39 +82,15 @@ async def get_current_user_info(
 ):
     """Get current user information"""
     try:
-        print("=== /me endpoint called ===")
-        print(f"Token received: {credentials.credentials[:20]}...")
-        
-        # Test database connection first
-        try:
-            db.execute(text("SELECT 1"))
-            print("✓ Database connection OK")
-        except Exception as db_error:
-            print(f"✗ Database connection FAILED: {str(db_error)}")
-            raise HTTPException(status_code=500, detail=f"Database connection error: {str(db_error)}")
-        
-        # Get current user
         current_user = get_current_user(credentials, db)
-        print(f"✓ User found: {current_user.username if current_user else 'None'}")
         
         if current_user is None:
             raise HTTPException(status_code=401, detail="User not found")
-        
-        # Log user data for debugging
-        print(f"User ID: {current_user.id}")
-        print(f"Username: {current_user.username}")
-        print(f"Email: {current_user.email}")
-        print(f"Has photo_url: {hasattr(current_user, 'photo_url')}")
-        print(f"Has google_id: {hasattr(current_user, 'google_id')}")
         
         return current_user
     except HTTPException:
         raise
     except Exception as e:
-        import traceback
-        error_trace = traceback.format_exc()
-        print(f"✗ Error in /me endpoint: {str(e)}")
-        print(f"Full traceback:\n{error_trace}")
         raise HTTPException(status_code=500, detail=f"Failed to get user information: {str(e)}")
 
 @router.post("/refresh", response_model=schemas.Token)
@@ -339,20 +313,6 @@ async def delete_account(
         return {"message": "Account deleted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to delete account: {str(e)}")
-
-@router.post("/logout")
-async def logout(
-    credentials: HTTPAuthorizationCredentials = Depends(security),
-    db: Session = Depends(get_db)
-):
-    """Logout user (token invalidation would be handled client-side)"""
-    try:
-        # In a real implementation, you might want to maintain a blacklist of tokens
-        # For now, we'll just verify the token is valid
-        current_user = get_current_user(credentials, db)
-        return {"message": "Successfully logged out"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to logout: {str(e)}")
 
 @router.post("/update_points")
 async def update_points(
