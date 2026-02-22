@@ -15,7 +15,8 @@ from api import (
     auth as auth_api, users, books, diseases, drugs, dictionary, 
     notifications, normal_ranges, 
     app_links, about, instruments, notes, urine_slides, stool_slides, other_slides, leaderboard,
-    haematology_tests, serology_tests, biochemistry_tests, bacteriology_tests, other_tests
+    haematology_tests, serology_tests, biochemistry_tests, bacteriology_tests, other_tests,
+    privacy_policy
 )
 from auth import verify_token
 from config import settings
@@ -102,6 +103,7 @@ app.include_router(serology_tests.router, prefix="/api/serology-tests", tags=["s
 app.include_router(biochemistry_tests.router, prefix="/api/biochemistry-tests", tags=["biochemistry-tests"])
 app.include_router(bacteriology_tests.router, prefix="/api/bacteriology-tests", tags=["bacteriology-tests"])
 app.include_router(other_tests.router, prefix="/api/other-tests", tags=["other-tests"])
+app.include_router(privacy_policy.router, prefix="/api/privacy-policy", tags=["Privacy Policy"])
 
 @app.get("/")
 async def root():
