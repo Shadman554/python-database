@@ -16,6 +16,22 @@ class UserLogin(BaseModel):
     username: str
     password: str
 
+class UserAdminUpdate(BaseModel):
+    is_admin: Optional[bool] = None
+    is_active: Optional[bool] = None
+
+class UserCreateAdmin(BaseModel):
+    username: str
+    email: EmailStr
+    password: str
+    is_admin: bool = False
+
+class PasswordChange(BaseModel):
+    new_password: str
+
+class PointsUpdate(BaseModel):
+    points: int
+
 class User(UserBase):
     id: str
     is_active: bool
