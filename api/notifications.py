@@ -189,18 +189,37 @@ async def mark_notification_read(
 
 @router.put("/mark-all-read")
 async def mark_all_notifications_read(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
     db: Session = Depends(get_db),
 ):
-    """Mark all notifications as read (public endpoint)"""
+    """Mark all notifications as read for the authenticated user"""
     try:
-        # Update all notifications to mark them as read
-        updated_count = db.query(models.Notification).update({"is_read": True})
+        from auth import get_current_user
+        
+        # Get the current authenticated user
+        current_user = get_current_user(credentials, db)
+        if not current_user:
+            raise HTTPException(status_code=401, detail="Authentication required")
+        
+        # Update only the current user's notifications to mark them as read
+        # Note: This assumes notifications have a user_id field. If notifications are global,
+        # we'll mark all as read (backward compatibility)
+        if hasattr(models.Notification, 'user_id'):
+            updated_count = db.query(models.Notification).filter(
+                models.Notification.user_id == current_user.id
+            ).update({"is_read": True})
+        else:
+            # Global notifications - mark all as read
+            updated_count = db.query(models.Notification).update({"is_read": True})
+        
         db.commit()
         
         return {
             "message": "All notifications marked as read",
             "updated_count": updated_count
         }
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to mark all notifications as read: {str(e)}")
 
