@@ -7,6 +7,7 @@ import schemas
 import crud
 from database import get_db
 from auth import get_current_user, get_password_hash, get_current_admin_user, security
+import uuid
 from utils import create_paginated_response
 # Dependency function for admin authentication
 def get_admin_user(
@@ -106,17 +107,17 @@ async def delete_user(
 @router.post("/{username}/points")
 async def add_user_points(
     username: str,
-    points: int,
+    body: schemas.PointsUpdate,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_admin_user)
 ):
-    """Add points to a user (admin only)"""
+    """Add points to a user (admin only) - points sent in request body"""
     try:
         db_user = db.query(models.User).filter(models.User.username == username).first()
         if not db_user:
             raise HTTPException(status_code=404, detail="User not found")
-        updated_user = crud.update_user_points(db, db_user.id, points)
-        return {"message": f"Added {points} points to user", "total_points": updated_user.total_points}
+        updated_user = crud.update_user_points(db, db_user.id, body.points)
+        return {"message": f"Added {body.points} points to user", "total_points": updated_user.total_points}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to add points: {str(e)}")
 
@@ -154,3 +155,74 @@ async def reset_daily_points(
         return {"message": "Daily points reset for all users"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to reset daily points: {str(e)}")
+
+@router.patch("/{username}/admin-status", response_model=schemas.User)
+async def update_admin_status(
+    username: str,
+    update: schemas.UserAdminUpdate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_admin_user)
+):
+    """Toggle admin or active status for a user (admin only)"""
+    if username == current_user.username:
+        raise HTTPException(status_code=400, detail="You cannot change your own admin or active status")
+    db_user = db.query(models.User).filter(models.User.username == username).first()
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    try:
+        update_data = {k: v for k, v in update.dict().items() if v is not None}
+        updated_user = crud.update_item(db, db_user, update_data)
+        return updated_user
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update user status: {str(e)}")
+
+@router.patch("/{username}/password")
+async def set_user_password(
+    username: str,
+    body: schemas.PasswordChange,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_admin_user)
+):
+    """Set a new password for a user (admin only) - password sent in request body, never in URL"""
+    if len(body.new_password) < 6:
+        raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
+    db_user = db.query(models.User).filter(models.User.username == username).first()
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    try:
+        db_user.hashed_password = get_password_hash(body.new_password)
+        db.commit()
+        return {"message": f"Password updated for user '{username}'"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to update password: {str(e)}")
+
+@router.post("/create", response_model=schemas.User)
+async def create_user_admin(
+    user_data: schemas.UserCreateAdmin,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_admin_user)
+):
+    """Create a new user or admin directly (admin only)"""
+    if db.query(models.User).filter(models.User.username == user_data.username).first():
+        raise HTTPException(status_code=400, detail="Username already exists")
+    if db.query(models.User).filter(models.User.email == user_data.email).first():
+        raise HTTPException(status_code=400, detail="Email already exists")
+    try:
+        new_user = models.User(
+            id=str(uuid.uuid4()),
+            username=user_data.username,
+            email=user_data.email,
+            hashed_password=get_password_hash(user_data.password),
+            is_active=True,
+            is_admin=user_data.is_admin,
+            total_points=0,
+            today_points=0,
+        )
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+        return new_user
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to create user: {str(e)}")
