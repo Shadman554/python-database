@@ -1,0 +1,168 @@
+Restarted application in 2,174ms.
+V/AutofillManager(24553): requestHideFillUi(null): anchor = null
+D/OplusInputMethodManagerInternal(24553): get inputMethodManager extension: com.android.internal.view.IInputMethodManager$Stub$Proxy@bc22df9
+D/ViewRootImplExtImpl(24553): the up motion event handled by client, just return
+D/Vibrator(24553): SystemVibrator Created
+V/AutofillManager(24553): requestHideFillUi(null): anchor = null
+I/flutter (24553): 🔴🔴🔴 GOOGLE SIGN-IN BUTTON PRESSED! 🔴🔴🔴
+I/flutter (24553): 📱 Device Info: Android
+I/flutter (24553): ⏰ Timestamp: 2025-10-21 19:49:31.151900
+I/flutter (24553): 🔵🔵🔵 CALLING authProvider.signInWithGoogle() for LOGIN... 🔵🔵🔵
+D/ViewRootImplExtImpl(24553): the up motion event handled by client, just return
+[log] 🚀🚀🚀 === GOOGLE SIGN-IN METHOD CALLED === 🚀🚀🚀
+[log] 📅 Timestamp: 2025-10-21 19:49:31.154636
+[log] 🔍 Checking GoogleSignIn instance: Instance of 'GoogleSignIn'
+[log] 📱 Platform: Android
+[log] ⚙️ Loading state set to true
+[log] 🟢 Starting Google Sign-In process...
+[log] 🔑 Calling _googleSignIn.signIn()...
+D/callGcSupression(24553): java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+D/ScrollOptim [SceneManager](24553): updateCurrentActivity: mCurrentActivityName=null, isOptEnable=true, isAnimAheadEnable=true, isFrameInsertEnable=true, InsertNum=1, isEnabledForScrollChanged=false
+D/ColorModeChangeItem(24553): preExecute mColorMode=0
+D/callGcSupression(24553): java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+D/ResourcesManagerExtImpl(24553): applyConfigurationToAppResourcesLocked app.getDisplayId() return callback.displayId:0
+D/ScrollOptim [SceneManager](24553): updateCurrentActivity: mCurrentActivityName=com.google.android.gms.auth.api.signin.internal.SignInHubActivity, isOptEnable=true, isAnimAheadEnable=true, isFrameInsertEnable=true, InsertNum=1, isEnabledForScrollChanged=false
+D/ActivityThread(24553): ComponentInfo{com.shada.vetdictplus/com.google.android.gms.auth.api.signin.internal.SignInHubActivity} checkFinished=false 2
+D/ResourcesManagerExtImpl(24553): applyConfigurationToAppResourcesLocked app.getDisplayId() return callback.displayId:0
+D/WindowManager(24553): Add to mViews: com.android.internal.policy.DecorView{f1861e3 I.E...... R.....I. 0,0-0,0 alpha=1.0 viewInfo = }[SignInHubActivity],pkg= com.shada.vetdictplus
+D/skia    (24553): setRusSupported enable 0
+D/ViewRootImplExtImpl(24553): onDisplayChanged -1 for VRI android.view.ViewRootImpl@6fb115e
+D/VRI[MainActivity](24553): onFocusEvent false
+D/callGcSupression(24553): java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+D/ResourcesManagerExtImpl(24553): applyConfigurationToAppResourcesLocked app.getDisplayId() return callback.displayId:0
+D/callGcSupression(24553): java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+D/ScrollOptim [SceneManager](24553): updateCurrentActivity: mCurrentActivityName=null, isOptEnable=true, isAnimAheadEnable=true, isFrameInsertEnable=true, InsertNum=1, isEnabledForScrollChanged=false
+E/OplusBracketLog(24553): [OplusViewMirrorManager] updateHostViewRootIfNeeded, not support android.view.ViewRootImpl@6fb115e
+D/ViewRootImplExtImpl(24553): wrapConfigInfoIntoFlags rotation=0, smallestScreenWidthDp=411, relayoutAsync=false, flags=0, newFlags=26935296, residentWS=false, title=com.shada.vetdictplus/com.google.android.gms.auth.api.signin.internal.SignInHubActivity
+D/VRI[SignInHubActivity](24553): relayoutWindow result, sizeChanged:true, surfaceControlChanged:true, transformHintChanged:false, mSurfaceSize:Point(1080, 2412), mLastSurfaceSize:Point(0, 0), mWidth:-1, mHeight:-1, requestedWidth:1080, requestedHeight:2412, transformHint:0, installOrientation:0, displayRotation:0, isSurfaceValid:true, attr.flag:25231616, tmpFrames:ClientWindowFrames{frame=[0,0][1080,2412] display=[0,0][1080,2412] parentFrame=[0,0][0,0]}, relayoutAsync:false, mSyncSeqId:0
+W/VRI[SignInHubActivity](24553): updateBlastSurfaceIfNeeded, surfaceSize:Point(1080, 2412), lastSurfaceSize:Point(0, 0), format:-2, blastBufferQueue:null
+D/BufferQueueConsumer(24553): [](id:5fe900000003,api:0,p:-1,c:24553) connect: controlledByApp=false
+W/libc    (24553): Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+D/BufferQueueProducer(24553): [VRI[SignInHubActivity]#3(BLAST Consumer)3](id:5fe900000003,api:1,p:24553,c:24553) connect: api=1 producerControlledByApp=true
+I/SurfaceControl(24553):  setExtendedRangeBrightness sc=Surface(name=com.shada.vetdictplus/com.google.android.gms.auth.api.signin.internal.SignInHubActivity)/@0xa7e2a5b,currentBufferRatio=1.0,desiredRatio=1.0
+D/BLASTBufferQueue(24553): [VRI[SignInHubActivity]#3](f:0,a:1) acquireNextBufferLocked size=1080x2412 mFrameNumber=1 applyTransaction=true mTimestamp=36051298985256(auto) mPendingTransactions.size=0 graphicBufferId=105454332018704 transform=0
+D/VRI[SignInHubActivity](24553): Received frameCommittedCallback lastAttemptedDrawFrameNum=1 didProduceBuffer=true syncBuffer=false
+D/VRI[SignInHubActivity](24553): draw finished. seqId=0
+D/ViewRootImplExtImpl(24553): setMaxDequeuedBufferCount: 2
+D/callGcSupression(24553): java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+W/VRI[SignInHubActivity](24553): handleResized, msg:, frameChanged:false, configChanged:false, displayChanged:false, attachedFrameChanged:false, compatScaleChanged:false, pendingDragResizing=false
+D/VRI[SignInHubActivity](24553): Received frameCommittedCallback lastAttemptedDrawFrameNum=2 didProduceBuffer=false syncBuffer=false
+D/VRI[SignInHubActivity](24553): draw finished. seqId=0
+D/OplusScrollToTopManager(24553): com.shada.vetdictplus/com.shada.vetdictplus.MainActivity,This com.android.internal.policy.DecorView{a679040 V.E...... R....... 0,0-1080,2412 aid=0 alpha=1.0 viewInfo = }[MainActivity] change focus to false
+D/ColorModeChangeItem(24553): preExecute mColorMode=0
+D/callGcSupression(24553): java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+D/ScrollOptim [SceneManager](24553): updateCurrentActivity: mCurrentActivityName=com.google.android.gms.auth.api.signin.internal.SignInHubActivity, isOptEnable=true, isAnimAheadEnable=true, isFrameInsertEnable=true, InsertNum=1, isEnabledForScrollChanged=false
+D/ActivityThread(24553): ComponentInfo{com.shada.vetdictplus/com.google.android.gms.auth.api.signin.internal.SignInHubActivity} checkFinished=false 4
+D/ResourcesManagerExtImpl(24553): applyConfigurationToAppResourcesLocked app.getDisplayId() return callback.displayId:0
+D/VRI[SignInHubActivity](24553): onFocusEvent true
+D/ViewRootImplExtImpl(24553): wrapConfigInfoIntoFlags rotation=0, smallestScreenWidthDp=411, relayoutAsync=true, flags=0, newFlags=26935296, residentWS=false, title=com.shada.vetdictplus/com.google.android.gms.auth.api.signin.internal.SignInHubActivity
+D/VRI[SignInHubActivity](24553): relayoutWindow result, sizeChanged:false, surfaceControlChanged:false, transformHintChanged:false, mSurfaceSize:Point(1080, 2412), mLastSurfaceSize:Point(1080, 2412), mWidth:1080, mHeight:2412, requestedWidth:1080, requestedHeight:2412, transformHint:0, installOrientation:0, displayRotation:0, isSurfaceValid:true, attr.flag:25231616, tmpFrames:ClientWindowFrames{frame=[0,0][1080,2412] display=[0,0][1080,2412] parentFrame=[0,0][1080,2412]}, relayoutAsync:true, mSyncSeqId:0
+W/VRI[SignInHubActivity](24553): updateBlastSurfaceIfNeeded, surfaceSize:Point(1080, 2412), lastSurfaceSize:Point(1080, 2412), format:-2, blastBufferQueue:android.graphics.BLASTBufferQueue@502c63c
+D/callGcSupression(24553): java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+D/ScrollOptim [SceneManager](24553): updateCurrentActivity: mCurrentActivityName=null, isOptEnable=true, isAnimAheadEnable=true, isFrameInsertEnable=true, InsertNum=1, isEnabledForScrollChanged=false
+D/ColorModeChangeItem(24553): preExecute mColorMode=0
+[log] Google user signed in: shadmanosman59@gmail.com
+D/VRI[SignInHubActivity](24553): onFocusEvent false
+D/VRI[SignInHubActivity](24553): dispatchAppVisibility visible:false
+D/callGcSupression(24553): java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+D/ScrollOptim [SceneManager](24553): updateCurrentActivity: mCurrentActivityName=com.shada.vetdictplus.MainActivity, isOptEnable=true, isAnimAheadEnable=true, isFrameInsertEnable=true, InsertNum=1, isEnabledForScrollChanged=false
+D/ActivityThread(24553): ComponentInfo{com.shada.vetdictplus/com.shada.vetdictplus.MainActivity} checkFinished=false 4
+D/ResourcesManagerExtImpl(24553): applyConfigurationToAppResourcesLocked app.getDisplayId() return callback.displayId:0
+D/VRI[MainActivity](24553): onFocusEvent true
+D/VRI[SignInHubActivity](24553): visibilityChanged oldVisibility=true newVisibility=false
+D/HWUI    (24553): RenderProxy::destroy: this=0xb4000074e2506900, mContext=0xb400007624b9ba80
+D/HWUI    (24553): SkiaOpenGLPipeline::setSurface: this=0xb400007591860f00, surface=NULL
+D/BufferQueueProducer(24553): [VRI[SignInHubActivity]#3(BLAST Consumer)3](id:5fe900000003,api:1,p:24553,c:24553) disconnect: api 1
+D/ViewRootImplExtImpl(24553): wrapConfigInfoIntoFlags rotation=0, smallestScreenWidthDp=411, relayoutAsync=false, flags=0, newFlags=26935296, residentWS=false, title=com.shada.vetdictplus/com.google.android.gms.auth.api.signin.internal.SignInHubActivity
+D/VRI[SignInHubActivity](24553): relayoutWindow result, sizeChanged:false, surfaceControlChanged:true, transformHintChanged:false, mSurfaceSize:Point(1080, 2412), mLastSurfaceSize:Point(1080, 2412), mWidth:1080, mHeight:2412, requestedWidth:1080, requestedHeight:2412, transformHint:0, installOrientation:0, displayRotation:0, isSurfaceValid:false, attr.flag:25231616, tmpFrames:ClientWindowFrames{frame=[0,0][1080,2412] display=[0,0][1080,2412] parentFrame=[0,0][0,0]}, relayoutAsync:false, mSyncSeqId:0
+D/BLASTBufferQueue(24553): [VRI[SignInHubActivity]#3](f:0,a:1) destructor()
+D/BufferQueueConsumer(24553): [VRI[SignInHubActivity]#3(BLAST Consumer)3](id:5fe900000003,api:0,p:-1,c:24553) disconnect
+D/callGcSupression(24553): java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+D/VRI[SignInHubActivity](24553): setWindowStopped stopped:true
+W/WindowOnBackDispatcher(24553): sendCancelIfRunning: isInProgress=false callback=android.app.Activity$2@22e7755
+D/OplusScrollToTopManager(24553): com.shada.vetdictplus/com.google.android.gms.auth.api.signin.internal.SignInHubActivity,window dying
+D/OplusScrollToTopManager(24553): com.shada.vetdictplus/com.google.android.gms.auth.api.signin.internal.SignInHubActivity,unregisterSystemUIBroadcastReceiver
+D/OplusScrollToTopManager(24553): com.shada.vetdictplus/com.google.android.gms.auth.api.signin.internal.SignInHubActivity, unregisterSystemUIBroadcastReceiver failed java.lang.IllegalArgumentException: Receiver not registered: android.view.OplusScrollToTopManager$2@ee48dc3
+D/HWUI    (24553): RenderProxy::destroy: this=0xb4000074e2506900, mContext=0xb400007624b9ba80
+D/HWUI    (24553): SkiaOpenGLPipeline::setSurface: this=0xb400007591860f00, surface=NULL
+[log] Google access token obtained
+I/flutter (24553):
+I/flutter (24553): 🔄 === STARTING GOOGLE LOGIN/REGISTRATION PROCESS ===
+I/flutter (24553): 📧 Email: shadmanosman59@gmail.com
+I/flutter (24553): 👤 Name: Shadman Othman
+I/flutter (24553): 🆔 Google ID: 100468425419257288119
+I/flutter (24553):  Photo URL: https://lh3.googleusercontent.com/a/ACg8ocLDKUCCD-KR6Q9Ea7rHmufoktXc6urqp_clxjaFu6Du0EYQDjCC
+I/flutter (24553): 🌐 Base URL: https://python-database-production.up.railway.app
+I/flutter (24553): ================================================
+I/flutter (24553):
+I/flutter (24553): 🔑 STEP 1: Attempting Google login endpoint...
+[log] 🔑 Attempting Google login endpoint...
+I/flutter (24553): 🟡 STEP 2: Attempting Google registration endpoint...
+[log] Google login response status: 400
+[log] Google login response body: {"detail":"Google token is required"}
+[log] ❌ Google login failed: null
+[log] 🆕 Attempting Google registration endpoint...
+[log] Google registration response status: 400
+[log] Google registration response body: {"detail":"Google token is required"}
+I/flutter (24553): 🔄 STEP 3: Attempting regular login with email...
+I/flutter (24553): 🔑 STEP 1: Attempting regular login with email...
+[log] ❌ Google registration failed: null
+I/flutter (24553): Attempting to login user: shadmanosman59@gmail.com
+D/OplusScrollToTopManager(24553): com.shada.vetdictplus/com.shada.vetdictplus.MainActivity,This com.android.internal.policy.DecorView{a679040 V.E...... R....... 0,0-1080,2412 aid=0 alpha=1.0 viewInfo = }[MainActivity] change focus to true
+I/flutter (24553): Login response status: 422
+I/flutter (24553): Login response body: {"detail":[{"type":"missing","loc":["body","username"],"msg":"Field required","input":{"email":"shadmanosman59@gmail.com","password":"100468425419257288119"},"url":"https://errors.pydantic.dev/2.12/v/missing"}]}
+I/flutter (24553): Retry login with username="shadmanosman59" status: 401
+I/flutter (24553): Retry body: {"detail":"Incorrect username or password"}
+I/flutter (24553): Retry login with username="shadmanosman59@gmail.com" status: 401
+I/flutter (24553): Retry body: {"detail":"Incorrect username or password"}
+I/flutter (24553): 🔄 STEP 2: Trying login with username variations...
+[log] 🔍 Trying username: Shadman
+I/flutter (24553): Attempting to login with username: Shadman
+I/flutter (25842): [IMPORTANT:flutter/shell/common/shell.cc(527)] [Action Required]: Impeller opt-out deprecated.
+I/flutter (25842):     The application opted out of Impeller by either using the
+I/flutter (25842):     `--no-enable-impeller` flag or the
+I/flutter (25842):     `io.flutter.embedding.android.EnableImpeller` `AndroidManifest.xml` entry.
+I/flutter (25842):     These options are going to go away in an upcoming Flutter release. Remove
+I/flutter (25842):     the explicit opt-out. If you need to opt-out, please report a bug describing
+I/flutter (25842):     the issue.
+I/flutter (25842):
+I/flutter (25842):     https://github.com/flutter/flutter/issues/new?template=02_bug.yml
+I/flutter (25842):
+[log] 🔍 Trying username: shadman
+I/flutter (24553): Login response status: 401
+I/flutter (24553): Login response body: {"detail":"Incorrect username or password"}
+I/flutter (24553): Attempting to login with username: shadman
+I/flutter (24553): Login response status: 401
+I/flutter (24553): Login response body: {"detail":"Incorrect username or password"}
+I/flutter (24553): Attempting to login with username: Shadman Othman
+[log] 🔍 Trying username: Shadman Othman
+I/flutter (24553): Login response status: 401
+I/flutter (24553): Login response body: {"detail":"Incorrect username or password"}
+I/flutter (24553): Attempting to login with username: shadman othman
+[log] 🔍 Trying username: shadman othman
+I/flutter (24553): Login response status: 401
+I/flutter (24553): Login response body: {"detail":"Incorrect username or password"}
+[log] 🔍 Trying username: Shadman.Othman
+I/flutter (24553): Attempting to login with username: Shadman.Othman
+I/flutter (24553): Login response status: 401
+I/flutter (24553): Login response body: {"detail":"Incorrect username or password"}
+I/flutter (24553): Attempting to login with username: shadmanosman59
+[log] 🔍 Trying username: shadmanosman59
+I/flutter (24553): Login response status: 401
+I/flutter (24553): Login response body: {"detail":"Incorrect username or password"}
+[log] 🔍 Trying username: shadmanosman59
+I/flutter (24553): Attempting to login with username: shadmanosman59
+I/flutter (24553): Login response status: 401
+I/flutter (24553): Login response body: {"detail":"Incorrect username or password"}
+I/flutter (24553): Attempting to login with username: Shadman_google
+[log] 🔍 Trying username: Shadman_google
+I/flutter (24553): Login response status: 401
+I/flutter (24553): Login response body: {"detail":"Incorrect username or password"}
+I/flutter (24553): Attempting to login with username: shadman_google
+[log] 🔍 Trying username: shadman_google
+W/flutter-plugin-(25842): type=1400 audit(0.0:8177): avc:  granted  { execute } for  path="/data/data/com.google.android.apps.nbu.paisa.user/app_pccache2/5/E47C86B2C77009FBA9F0C961D11E60B330CFF68E/pcam.jar" dev="dm-99" ino=1768736 scontext=u:r:untrusted_app:s0:c211,c256,c512,c768 tcontext=u:object_r:app_data_file:s0:c211,c256,c512,c768 tclass=file app=com.google.android.apps.nbu.paisa.user
+[log] ❌ All login attempts failed - account may not exist or wrong credentials
+I/flutter (24553): Login response status: 401
+I/flutter (24553): Login response body: {"detail":"Incorrect username or password"}
+I/flutter (24553): 🟡🟡🟡 GOOGLE RESULT: {success: false, message: ئەکاونت نەدۆزرایەوە یان زانیارییەکان هەڵەن. تکایە هەژماری نوێ دروست بکە., account_not_found: true, email: shadmanosman59@gmail.com, error_type: account_not_found} 🟡🟡🟡
+I/flutter (24553): ❌ Google Sign-In failed: account_not_found - ئەکاونت نەدۆزرایەوە یان زانیارییەکان هەڵەن. تکایە هەژماری نوێ دروست بکە.
