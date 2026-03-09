@@ -50,8 +50,8 @@ async def login(user_credentials: schemas.UserLogin, db: Session = Depends(get_d
 
         if not user.is_active:
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Inactive user",
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="هەژمارەکەت راگیراوە",
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
@@ -113,8 +113,8 @@ async def refresh_token_endpoint(
         
         if not user.is_active:
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Inactive user"
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="هەژمارەکەت راگیراوە"
             )
 
         # Create new access token
@@ -219,8 +219,8 @@ async def google_login(request: Request, db: Session = Depends(get_db)):
 
         if not db_user.is_active:
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Inactive user"
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="هەژمارەکەت راگیراوە"
             )
 
         # Create access token
