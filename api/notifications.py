@@ -190,9 +190,8 @@ async def mark_notification_read(
 @router.put("/mark-all-read")
 async def mark_all_notifications_read(
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_admin_user),
 ):
-    """Mark all notifications as read"""
+    """Mark all notifications as read (public endpoint)"""
     try:
         # Update all notifications to mark them as read
         updated_count = db.query(models.Notification).update({"is_read": True})
