@@ -193,6 +193,7 @@ class CEO(Base):
     color = Column(String(7), nullable=False)  # Hex color like #2563EB
     image_url = Column(String(1000))
     facebook_url = Column(String(1000))
+    instagram_url = Column(String(1000))
     viber_url = Column(String(1000))
     display_order = Column(Integer, default=0)
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -207,6 +208,7 @@ class Supporter(Base):
     color = Column(String(7), nullable=False)  # Hex color like #7C3AED
     icon = Column(String(50), default='school')  # Icon name
     image_url = Column(String(1000))
+    description = Column(Text)
     display_order = Column(Integer, default=0)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

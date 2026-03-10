@@ -160,7 +160,13 @@ def verify_token(credentials: HTTPAuthorizationCredentials, db: Session):
     return user
 
 def authenticate_user(db: Session, username: str, password: str):
+    # Try to find user by username first
     user = db.query(models.User).filter(models.User.username == username).first()
+    
+    # If not found by username, try by email
+    if not user:
+        user = db.query(models.User).filter(models.User.email == username).first()
+    
     if not user:
         return False
     if not verify_password(password, user.hashed_password):

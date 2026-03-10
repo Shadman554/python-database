@@ -321,6 +321,7 @@ class CEOBase(BaseModel):
     color: str
     image_url: Optional[str] = None
     facebook_url: Optional[str] = None
+    instagram_url: Optional[str] = None
     viber_url: Optional[str] = None
     display_order: int = 0
 
@@ -334,6 +335,7 @@ class CEOUpdate(BaseModel):
     color: Optional[str] = None
     image_url: Optional[str] = None
     facebook_url: Optional[str] = None
+    instagram_url: Optional[str] = None
     viber_url: Optional[str] = None
     display_order: Optional[int] = None
 
@@ -352,6 +354,7 @@ class SupporterBase(BaseModel):
     color: str
     icon: str = "school"
     image_url: Optional[str] = None
+    description: Optional[str] = None
     display_order: int = 0
 
 class SupporterCreate(SupporterBase):
@@ -363,6 +366,7 @@ class SupporterUpdate(BaseModel):
     color: Optional[str] = None
     icon: Optional[str] = None
     image_url: Optional[str] = None
+    description: Optional[str] = None
     display_order: Optional[int] = None
 
 class Supporter(SupporterBase):
