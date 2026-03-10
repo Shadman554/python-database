@@ -30,6 +30,21 @@ from middleware import (
 
 security = HTTPBearer()
 
+def _run_column_migrations():
+    """Safely add new columns to existing tables without dropping data."""
+    migrations = [
+        "ALTER TABLE ceos ADD COLUMN IF NOT EXISTS instagram_url VARCHAR(1000)",
+        "ALTER TABLE supporters ADD COLUMN IF NOT EXISTS description TEXT",
+    ]
+    with engine.connect() as conn:
+        for stmt in migrations:
+            try:
+                conn.execute(text(stmt))
+                app_logger.info(f"✅ Migration applied: {stmt}")
+            except Exception as e:
+                app_logger.warning(f"⚠️  Migration skipped ({stmt}): {e}")
+        conn.commit()
+
 def get_admin_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
     db: Session = Depends(get_db),
@@ -49,6 +64,8 @@ async def lifespan(app: FastAPI):
         # Create database tables
         Base.metadata.create_all(bind=engine)
         app_logger.info("✅ Database tables created/verified")
+        # Column migrations (safe: only adds if not exists)
+        _run_column_migrations()
     else:
         app_logger.error("❌ Failed to connect to database")
     
