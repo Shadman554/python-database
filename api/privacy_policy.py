@@ -129,10 +129,10 @@ PRIVACY_POLICY_HTML = """<!DOCTYPE html>
         <h3>2.3 Locally Stored Data (On Your Device)</h3>
         <p>The App stores the following data locally on your device using SharedPreferences and secure storage:</p>
         <ul>
-            <li><strong>Favorites:</strong> Drugs, diseases, and terminology items you mark as favorites</li>
-            <li><strong>Browsing History:</strong> Recently viewed items (drugs, diseases, terminology, notes, etc.)</li>
-            <li><strong>Cached Content:</strong> Veterinary dictionary data, drugs, diseases, terminology, books, notes, instruments, normal ranges, and test information for offline access</li>
-            <li><strong>App Preferences:</strong> Language selection (Kurdish/English), theme (light/dark mode), font size settings</li>
+            <li><strong>Favorites:</strong> Veterinary medications, diseases, and terminology items you mark as favorites</li>
+            <li><strong>Browsing History:</strong> Recently viewed items (veterinary medications, diseases, terminology, notes, etc.)</li>
+            <li><strong>Cached Content:</strong> Veterinary dictionary data, veterinary medications, diseases, terminology, books, notes, instruments, normal ranges, and test information for offline access</li>
+            <li><strong>App Preferences:</strong> Theme (light/dark mode), font size settings</li>
             <li><strong>Authentication Tokens:</strong> Access and refresh tokens stored in Flutter Secure Storage (Android Keystore/iOS Keychain)</li>
             <li><strong>User Profile Data:</strong> Non-sensitive user information cached for quick access</li>
             <li><strong>Introduction Status:</strong> Whether you've completed the app introduction</li>
@@ -140,7 +140,7 @@ PRIVACY_POLICY_HTML = """<!DOCTYPE html>
         </ul>
 
         <h3>2.4 Push Notification Data</h3>
-        <p>We use OneSignal (App ID: c680a189-e57c-48b4-9ce8-b28d91dc5c58) to deliver push notifications. OneSignal may collect:</p>
+        <p>We use OneSignal to deliver push notifications. OneSignal may collect:</p>
         <ul>
             <li>Device type, model, and operating system version</li>
             <li>A unique device identifier (OneSignal Player ID) for notification delivery</li>
@@ -175,11 +175,11 @@ PRIVACY_POLICY_HTML = """<!DOCTYPE html>
         <p>We use the collected information for the following purposes:</p>
         <ul>
             <li><strong>Account Management:</strong> Authenticate your identity, manage your account, and provide personalized features</li>
-            <li><strong>Content Delivery:</strong> Provide access to veterinary drugs, diseases, terminology, books, notes, instruments, normal ranges, and test information</li>
+            <li><strong>Content Delivery:</strong> Provide access to veterinary medications, diseases, terminology, books, notes, instruments, normal ranges, and test information</li>
             <li><strong>Offline Access:</strong> Cache content locally on your device for offline use</li>
-            <li><strong>Personalization:</strong> Save your preferences (language, theme, font size), favorites, and browsing history</li>
+            <li><strong>Personalization:</strong> Save your preferences (theme, font size), favorites, and browsing history</li>
             <li><strong>Push Notifications:</strong> Send you notifications about new content, updates, and important announcements</li>
-            <li><strong>Search Functionality:</strong> Enable search across all content types (drugs, diseases, terminology, etc.)</li>
+            <li><strong>Search Functionality:</strong> Enable search across all content types (veterinary medications, diseases, terminology, etc.)</li>
             <li><strong>Data Synchronization:</strong> Sync your locally created content (notes, dictionary terms) to the server if you choose</li>
             <li><strong>App Improvement:</strong> Analyze usage patterns to improve the App's performance and features</li>
             <li><strong>Security:</strong> Detect and prevent unauthorized access, fraud, and abuse</li>
@@ -333,7 +333,6 @@ PRIVACY_POLICY_HTML = """<!DOCTYPE html>
             <p><strong>App Package:</strong> com.shaduman.vetdictplus</p>
             <p><strong>Google Play:</strong> <a href="https://play.google.com/store/apps/details?id=com.shaduman.vetdictplus" target="_blank">VET DICT+ on Google Play</a></p>
             <p><strong>App Store:</strong> <a href="https://apps.apple.com/us/app/vet-dict/id6680200091" target="_blank">VET DICT+ on App Store</a></p>
-            <p><strong>API Backend:</strong> python-database.up.railway.app</p>
         </div>
         <p style="margin-top: 16px;">We will respond to your inquiry within 30 days.</p>
     </div>
